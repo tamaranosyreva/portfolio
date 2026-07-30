@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тамара Носырева — Digital &amp; GEO</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap">
+
+<style>
+/* ============================================================
+   ПЕРЕМЕННЫЕ
+   ============================================================ */
+:root {
+  --ink:      #141414;   /* основной текст, почти чёрный */
+  --paper:    #FFFFFF;   /* фон */
+  --muted:    #7A7A7A;   /* серый текст, подписи */
+  --line:     #E7E7E7;   /* тонкие линии */
+  --lime:     #DDFF61;   /* акцент — фирменный салатовый */
+  --lime-ink: #141414;   /* текст поверх салатового */
+
+  --font:      "Golos Text", system-ui, sans-serif;   /* заголовки и текст */
+  --font-mono: "Space Mono", ui-monospace, monospace; /* числа, лейблы, теги */
+
+  /* Один модуль на всю страницу: отступ от края экрана и промежуток
+     между колонками — одна и та же величина. Меняешь тут — двигается
+     вся сетка разом. */
+  --unit: 40px;
+
+  /* Толщина всех салатовых горизонтальных полос — одна на всех,
+     чтобы разделители нигде не отличались друг от друга. */
+  --lime-thickness: 3px;
+
+  /* Отступ от меню до зелёного квадрата в хиро = отступ от квадрата
+     до полосы под хиро. Одно число управляет обоими. */
+  --hero-gap: 100px;
+}
+
+/* ============================================================
+   БАЗА
+   ============================================================ */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+h1, h2, h3, h4, h5, h6 { font-family: var(--font); }
+a { color: var(--ink); text-decoration: none; }
+::selection { background: var(--lime); color: var(--lime-ink); }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+/* сетка в 3 равные колонки — основа хиро, заголовков, инструментов, контактов */
+.grid3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: var(--unit);
+}
+.span-2 { grid-column: span 2; }
+
+/* составные слова с дефисом внутри — никогда не переносятся по дефису,
+   целиком уходят на следующую строку */
+.nowrap { white-space: nowrap; }
+
+/* мелкая надпись капсом (номера, лейблы) — моноширинным */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* фантомная крупная цифра на фоне блока — единственный номер, без мелких дублей */
+.ghost-num {
+  position: absolute;
+  font-family: var(--font);
+  font-weight: 800;
+  line-height: .8;
+  letter-spacing: -.04em;
+  color: var(--ink);
+  opacity: .06;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+/* уголок-засечка — декоративная метка на медиа-блоках */
+.corner-mark { position: absolute; top: 14px; right: 14px; color: var(--lime); z-index: 2; }
+
+/* пилюля-тег */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* круглая кнопка со стрелкой (кейсы, контакты — оставили как есть) */
+.arrow-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--lime);
+  font-size: 18px;
+  flex: none;
+  transition: transform .25s cubic-bezier(.2,.7,.2,1);
+}
+.arrow-btn--lime { background: var(--lime); color: var(--ink); }
+
+/* ============================================================
+   ШАПКА
+   ============================================================ */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: baseline;
+  gap: var(--unit);
+  padding: 20px var(--unit);
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--line);
+}
+.site-header .brand {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.site-nav {
+  display: flex;
+  gap: 28px;
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.site-nav a { color: var(--muted); transition: color .2s; }
+.site-nav a:hover { color: var(--ink); }
+
+/* ============================================================
+   ХИРО
+   ============================================================ */
+.hero { position: relative; padding: 14vh var(--unit) 0; overflow: hidden; }
+.hero-grid { position: relative; z-index: 1; }
+.hero-aside { grid-column: 1; display: flex; flex-direction: column; }
+
+/* роль — залитый салатовый блок, слова столбиком, каждое развёрнуто на 90°.
+   Отступ сверху выравнивает верх блока ровно на --hero-gap от шапки, а
+   flex:1 дотягивает низ блока вплотную к низу хиро-колонки — так что
+   зазор до полосы ниже задаёт только margin-top у .lime-bar. */
+.hero-role-block {
+  flex: 1;
+  margin-top: calc(var(--hero-gap) - 14vh);
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 20px;
+  background: var(--lime);
+  color: #4A4A4A;
+  padding: 20px;
+}
+.hero-role-words { display: flex; align-items: flex-end; gap: 8px; }
+.hero-role-words .word {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(24px, 2.2vw, 32px);
+  line-height: .9;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.hero-role-block .mark { font-size: 24px; line-height: 1; color: var(--ink); }
+
+.hero-main { grid-column: span 2; }
+.hero-title {
+  margin: 0;
+  font-size: clamp(40px, 5.6vw, 88px);
+  line-height: 1.04;
+  letter-spacing: -.03em;
+  font-weight: 800;
+  text-wrap: pretty;
+}
+.hero-lede {
+  margin: 64px 0 0;
+  max-width: 58ch;
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* переход между хиро и контентом — та же толщина, что у линий у заголовков,
+   отступ сверху равен --hero-gap, чтобы совпадать с зазором над квадратом */
+.lime-bar { height: var(--lime-thickness); background: var(--lime); margin-top: var(--hero-gap); }
+
+/* ============================================================
+   СЕКЦИИ И ИХ ЗАГОЛОВКИ
+   ============================================================ */
+.section { padding: 0 var(--unit); }
+.section-head {
+  position: relative;
+  padding-top: calc(32px + var(--lime-thickness));
+  align-items: start;
+}
+/* та же техника заливки, что у .lime-bar — чтобы толщина совпадала пиксель в пиксель */
+.section-head::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: var(--lime-thickness);
+  background: var(--lime);
+}
+.section-head-title {
+  grid-column: span 2;
+  position: relative;
+}
+.section-head .ghost-num {
+  top: var(--lime-thickness);
+  left: 0;
+  font-size: clamp(90px, 11vw, 170px);
+}
+.section-head h2 {
+  position: relative;
+  grid-column: unset;
+  margin: 0;
+  font-size: clamp(32px, 3.6vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -.025em;
+  font-weight: 800;
+}
+.section-head .lede {
+  position: relative;
+  grid-column: 3;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* отступ от заголовка (и лида, если есть) до содержимого секции —
+   одна и та же величина везде: программы, кейсы, контакты */
+.stack, .case-grid, .contacts { margin-top: 96px; }
+
+/* ============================================================
+   01 — ИНСТРУМЕНТЫ (карточки)
+   ============================================================ */
+.tools {
+  margin-top: 86px;
+  row-gap: 56px;
+  padding-bottom: 14vh;
+}
+.tool {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-top: 1px solid var(--line);
+  padding: 22px 16px 20px 0;
+}
+.tool .ghost-num { top: 2px; right: -4px; font-size: 96px; }
+.tool .name { position: relative; font-size: 26px; font-weight: 600; letter-spacing: -.02em; line-height: 1.15; }
+.tool .desc { position: relative; font-size: 15px; line-height: 1.6; color: var(--muted); }
+
+/* ============================================================
+   02 — ПРОГРАММЫ И СЕРВИСЫ
+   ============================================================ */
+.stack {
+  row-gap: 32px;
+  padding-bottom: 14vh;
+}
+.stack-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+.stack-col span:not(.eyebrow) { font-size: 15px; font-weight: 500; }
+
+/* ============================================================
+   03 — КЕЙСЫ (плитка 2×2, побольше воздуха)
+   ============================================================ */
+.case-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: var(--unit);
+  row-gap: 88px;
+  padding-bottom: 14vh;
+}
+.case-tile { display: flex; flex-direction: column; }
+.case-media {
+  position: relative;
+  overflow: hidden;
+  height: 40vh;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px;
+  background: var(--line);
+  color: var(--ink);
+}
+.case-media--dark { background: var(--ink); color: var(--paper); }
+.case-media--lime { background: var(--lime); color: var(--lime-ink); }
+.case-media .ghost-num {
+  top: 50%; left: 20px;
+  transform: translateY(-50%);
+  font-size: clamp(90px, 9vw, 150px);
+  color: currentColor;
+  opacity: .16;
+}
+/* заголовок кейса — теперь живёт внутри цветного блока, капсом */
+.case-media h3 {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: clamp(24px, 2.4vw, 34px);
+  line-height: 1.08;
+  letter-spacing: -.01em;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: inherit;
+}
+.case-media-caption {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: inherit;
+  opacity: .85;
+}
+a.case-media-caption { text-decoration: underline; text-underline-offset: 3px; transition: opacity .2s; }
+a.case-media-caption:hover { opacity: 1; }
+.case-media--proofs { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
+.case-media--proofs .proof {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 14px;
+  border: 1px solid rgba(20,20,20,.15);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  opacity: .85;
+}
+
+.case-body { padding-top: 26px; display: flex; flex-direction: column; gap: 26px; }
+.case-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.case-facts { display: flex; flex-direction: column; gap: 20px; padding-top: 22px; border-top: 1px solid var(--line); }
+.case-facts > div { display: grid; grid-template-columns: 96px 1fr; gap: 16px; align-items: baseline; }
+.case-facts p { margin: 0; font-size: 15px; line-height: 1.6; }
+
+/* ============================================================
+   04 — КОНТАКТ И ПОДВАЛ
+   ============================================================ */
+.contact-claim {
+  margin: 96px 0 0;
+  font-size: clamp(34px, 5vw, 78px);
+  line-height: 1.06;
+  letter-spacing: -.03em;
+  font-weight: 800;
+  max-width: 24ch;
+}
+.contacts {
+  row-gap: var(--unit);
+}
+.contacts a, .contacts button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+  border: none;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  padding: 20px 0 0;
+  margin: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: border-top-color .2s;
+}
+.contacts a:hover, .contacts button:hover { border-top-color: var(--lime); }
+.contacts .field { display: flex; flex-direction: column; gap: 10px; text-align: left; }
+.contacts .value { font-size: 20px; font-weight: 500; }
+.contacts .arrow-btn { width: 34px; height: 34px; font-size: 14px; background: var(--lime); color: var(--lime-ink); border: none; transition: transform .2s, background .2s; }
+.contacts a:hover .arrow-btn, .contacts button:hover .arrow-btn { transform: scale(1.08); }
+.contacts .arrow-btn.is-copied { background: var(--ink); color: var(--lime); }
+
+.footer-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14vh;
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.7;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: right;
+}
+
+/* ============================================================
+   ПОЯВЛЕНИЕ БЛОКОВ ПРИ СКРОЛЛЕ
+   ============================================================ */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s cubic-bezier(.2,.7,.2,1), transform 1s cubic-bezier(.2,.7,.2,1);
+}
+[data-reveal].is-visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1; transform: none; transition: none; }
+}
+
+/* ============================================================
+   ПЕЧАТЬ / PDF
+   ============================================================ */
+@media print {
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
+  .site-header { position: static !important; backdrop-filter: none !important; }
+  .ghost-num { display: none !important; }
+  section { break-inside: auto; }
+  article, figure { break-inside: avoid; }
+  h1, h2, h3 { break-after: avoid; }
+}
+
+/* ============================================================
+   МОБИЛЬНАЯ АДАПТАЦИЯ
+   ============================================================ */
+@media (max-width: 860px) {
+  :root { --unit: 20px; }
+  .site-nav { display: none; }
+  .grid3 { grid-template-columns: 1fr; }
+  .grid3 > * { grid-column: 1 / -1 !important; }
+  .hero { padding-top: 10vh; }
+  .hero-aside { margin-bottom: 24px; }
+  .tools, .stack, .case-grid, .contacts { margin-top: 56px; }
+  .tools { row-gap: 40px; }
+  .case-grid { grid-template-columns: 1fr; row-gap: 64px; }
+  .case-facts > div { grid-template-columns: 1fr; gap: 6px; }
+  .contact-claim { margin-top: 40px; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- иконка-уголок, переиспользуется на медиа-блоках -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="icon-corner" viewBox="0 0 24 24">
+      <path d="M2 2H22V22" fill="none" stroke="currentColor" stroke-width="1.6"/>
+    </symbol>
+    <symbol id="icon-copy" viewBox="0 0 24 24">
+      <rect x="8.5" y="8.5" width="12" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M15.5 8.5V5.5a1.5 1.5 0 0 0-1.5-1.5H5a1.5 1.5 0 0 0-1.5 1.5V15a1.5 1.5 0 0 0 1.5 1.5h3" fill="none" stroke="currentColor" stroke-width="1.6"/>
+    </symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24">
+      <path d="M5 12.5L10 17.5L19 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ================= ШАПКА ================= -->
+<header class="site-header">
+  <span class="brand">Тамара Носырева</span>
+  <nav class="site-nav">
+    <a href="#geo">Digital &amp; GEO</a>
+    <a href="#stack">Программы</a>
+    <a href="#cases">Кейсы</a>
+    <a href="#contact">Контакты</a>
+  </nav>
+</header>
+
+<!-- ================= ХИРО ================= -->
+<section class="hero">
+  <div class="grid3 hero-grid">
+    <div class="hero-aside">
+      <div class="hero-role-block">
+        <div class="hero-role-words">
+          <span class="word">GEO</span>
+          <span class="word">Кастомизация</span>
+          <span class="word">Разработка</span>
+        </div>
+        <span class="mark" aria-hidden="true">✱</span>
+      </div>
+    </div>
+    <div class="hero-main">
+      <h1 class="hero-title">Делаю бренд видимым там, где&nbsp;решение принимает нейросеть</h1>
+      <p class="hero-lede">За&nbsp;последние 4&nbsp;года самостоятельно освоила разработку и&nbsp;техническую оптимизацию сайтов, автоматизацию процессов и&nbsp;GEO. Технические решения собираю с&nbsp;помощью <span class="nowrap">AI-инструментов</span> —&nbsp;от&nbsp;постановки задачи до&nbsp;работающего кода на&nbsp;сайте.</p>
+    </div>
+  </div>
+
+  <div class="lime-bar" aria-hidden="true"></div>
+</section>
+
+<!-- ================= 01 — DIGITAL & GEO ================= -->
+<section class="section" id="geo">
+  <div class="grid3 section-head" data-reveal>
+    <span class="ghost-num" aria-hidden="true">01</span>
+    <div class="section-head-title">
+      <h2>Digital &amp; GEO</h2>
+    </div>
+    <p class="lede">Видимость бренда в&nbsp;эпоху <span class="nowrap">AI-поиска</span> —&nbsp;от&nbsp;технической разметки до&nbsp;места в&nbsp;ответах нейросетей. Плюс всё, что&nbsp;нужно, чтобы сайт, боты и&nbsp;внутренние сервисы работали как одна система.</p>
+  </div>
+
+  <!-- сначала — всё про AI, GEO и автоматизацию, затем вёрстка и визуал.
+       чтобы добавить новую карточку — скопируй любой блок .tool -->
+  <div class="tools grid3" id="tools" data-reveal>
+    <div class="tool">
+      <span class="ghost-num" aria-hidden="true">01</span>
+      <span class="name"><span class="nowrap">AI-разработка</span></span>
+      <span class="desc">Реализую технические решения с&nbsp;помощью ИИ:&nbsp;от&nbsp;идеи до&nbsp;рабочего кода на&nbsp;сайте. Отвечаю за&nbsp;постановку задачи, тестирование и&nbsp;внедрение.</span>
+    </div>
+    <div class="tool">
+      <span class="ghost-num" aria-hidden="true">02</span>
+      <span class="name"><span class="nowrap">GEO-оптимизация</span></span>
+      <span class="desc">Аудит и&nbsp;внедрение видимости бренда в&nbsp;ChatGPT, Gemini, Яндекс Нейро</span>
+    </div>
+    <div class="tool">
+      <span class="ghost-num" aria-hidden="true">03</span>
+      <span class="name">Автоматизация процессов</span>
+      <span class="desc">Собственные скрипты для&nbsp;трекинга и&nbsp;рутинных задач, включая <span class="nowrap">GEO-мониторинг</span> через&nbsp;OpenAI API</span>
+    </div>
+    <div class="tool">
+      <span class="ghost-num" aria-hidden="true">04</span>
+      <span class="name">Интеграции с&nbsp;сервисами</span>
+      <span class="desc">Make.com, вебхуки, API:&nbsp;связываю сайт с&nbsp;CRM, системами лояльности и&nbsp;другими внешними сервисами</span>
+    </div>
+    <div class="tool">
+      <span class="ghost-num" aria-hidden="true">05</span>
+      <span class="name"><span class="nowrap">Telegram-боты</span></span>
+      <span class="desc">Разработка ботов и&nbsp;подключение их&nbsp;к&nbsp;сайту: заявки, напоминания, сценарии общения с&nbsp;клиентом</span>
+    </div>
+    <div class="tool">
+      <span class="ghost-num" aria-hidden="true">06</span>
+      <span class="name">Внутренние <span class="nowrap">веб-инструменты</span></span>
+      <span class="desc">Небольшие приложения для&nbsp;команды: цифровые <span class="nowrap">чек-листы</span> для&nbsp;сотрудников, системы учёта, дашборды</span>
+    </div>
+    <div class="tool">
+      <span class="ghost-num" aria-hidden="true">07</span>
+      <span class="name">Вёрстка и&nbsp;кастомизация Tilda</span>
+      <span class="desc">Каталог, лендинги, ведение сайта. Дописываю код там, где Tilda не&nbsp;умеет из&nbsp;коробки, —&nbsp;и&nbsp;довожу решение до&nbsp;работающего.</span>
+    </div>
+    <div class="tool">
+      <span class="ghost-num" aria-hidden="true">08</span>
+      <span class="name">Визуальные материалы</span>
+      <span class="desc">Афиши, <span class="nowrap">промо-макеты</span> для&nbsp;соцсетей и&nbsp;офлайн: Figma, Canva, Krea</span>
+    </div>
+    <div class="tool">
+      <span class="ghost-num" aria-hidden="true">09</span>
+      <span class="name">Дизайн лендингов</span>
+      <span class="desc">Разрабатываю дизайн страницы и&nbsp;сама же её&nbsp;собираю —&nbsp;от&nbsp;макета до&nbsp;готового сайта</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 02 — ПРОГРАММЫ И СЕРВИСЫ ================= -->
+<section class="section" id="stack">
+  <div class="grid3 section-head" data-reveal>
+    <span class="ghost-num" aria-hidden="true">02</span>
+    <div class="section-head-title">
+      <h2>Программы и сервисы</h2>
+    </div>
+    <p class="lede">Инструменты, которыми пользуюсь в&nbsp;работе</p>
+  </div>
+
+  <div class="stack grid3" data-reveal>
+    <div class="stack-col">
+      <span class="eyebrow">AI</span>
+      <span>Claude</span>
+      <span>ChatGPT / OpenAI API</span>
+      <span>Gemini</span>
+      <span>Krea</span>
+    </div>
+    <div class="stack-col">
+      <span class="eyebrow">Сайты</span>
+      <span>Tilda</span>
+      <span>HTML / CSS / JavaScript</span>
+      <span>Schema.org / JSON-LD</span>
+      <span>GitHub / GitHub Pages</span>
+    </div>
+    <div class="stack-col">
+      <span class="eyebrow">Дизайн</span>
+      <span>Figma</span>
+      <span>Canva</span>
+    </div>
+    <div class="stack-col">
+      <span class="eyebrow">Автоматизация</span>
+      <span>Make.com</span>
+      <span>Telegram Bot API</span>
+      <span>Google Apps Script</span>
+    </div>
+    <div class="stack-col">
+      <span class="eyebrow">CRM и учёт</span>
+      <span>Битрикс24</span>
+      <span>Notion</span>
+      <span>Google Sheets</span>
+    </div>
+    <div class="stack-col">
+      <span class="eyebrow">Аналитика</span>
+      <span>Яндекс Метрика / Вебмастер</span>
+      <span>Google Analytics 4 / Search Console</span>
+      <span>PageSpeed Insights, CrUX</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 03 — КЕЙСЫ ================= -->
+<section class="section" id="cases">
+  <div class="grid3 section-head" data-reveal>
+    <span class="ghost-num" aria-hidden="true">03</span>
+    <div class="section-head-title">
+      <h2>Кейсы</h2>
+    </div>
+  </div>
+
+  <!-- плитка 2×2: чтобы добавить кейс — скопируй любой блок .case-tile -->
+  <div class="case-grid">
+
+    <!-- Кейс 01 — SP Candle, GEO-аудит -->
+    <article class="case-tile" data-reveal>
+      <div class="case-media case-media--lime">
+        <svg class="corner-mark" width="18" height="18" style="color:var(--ink)"><use href="#icon-corner"></use></svg>
+        <span class="ghost-num" aria-hidden="true">01</span>
+        <a class="case-media-caption" href="https://spcandle.ru/" target="_blank" rel="noopener">spcandle.ru</a>
+        <h3>SP Candle —&nbsp;<span class="nowrap">GEO-аудит</span> и&nbsp;техническая оптимизация</h3>
+      </div>
+      <div class="case-body">
+        <div class="case-tags"><span class="pill">E-commerce</span><span class="pill">GEO</span></div>
+        <div class="case-facts">
+          <div><span class="eyebrow">Задача</span><p>Сделать бренд видимым в&nbsp;ответах <span class="nowrap">AI-поисковиков</span></p></div>
+          <div><span class="eyebrow">Сделано</span><p>Полный <span class="nowrap">GEO-аудит</span>, техническая разметка, оптимизация Core Web Vitals —&nbsp;зелёные показатели по&nbsp;CrUX</p></div>
+          <div><span class="eyebrow">Статус</span><p>Внедрено, количественный трекинг в&nbsp;разработке</p></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Кейс 02 — SP Candle, виджеты -->
+    <article class="case-tile" data-reveal>
+      <div class="case-media case-media--dark">
+        <svg class="corner-mark" width="18" height="18"><use href="#icon-corner"></use></svg>
+        <span class="ghost-num" aria-hidden="true">02</span>
+        <a class="case-media-caption" href="https://spcandle.ru/" target="_blank" rel="noopener">spcandle.ru</a>
+        <h3>SP Candle —&nbsp;виджеты и&nbsp;автоматизация</h3>
+      </div>
+      <div class="case-body">
+        <div class="case-tags"><span class="pill">Tilda</span><span class="pill">Make.com</span></div>
+        <div class="case-facts">
+          <div><span class="eyebrow">Задача</span><p>Улучшить навигацию по&nbsp;каталогу и&nbsp;конверсию</p></div>
+          <div><span class="eyebrow">Сделано</span><p>Кастомный виджет категорий, <span class="nowrap">промо-попапы</span> с&nbsp;интеграцией через&nbsp;Make.com</p></div>
+          <div><span class="eyebrow">Статус</span><p>Запущено</p></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Кейс 03 — GEO-консалтинг -->
+    <article class="case-tile" data-reveal>
+      <div class="case-media case-media--lime">
+        <svg class="corner-mark" width="18" height="18" style="color:var(--ink)"><use href="#icon-corner"></use></svg>
+        <span class="ghost-num" aria-hidden="true">03</span>
+        <h3><span class="nowrap">GEO-консалтинг</span> для&nbsp;частного специалиста</h3>
+      </div>
+      <div class="case-body">
+        <div class="case-tags"><span class="pill">Практикующий психолог</span><span class="pill">GEO</span><span class="pill">Вёрстка</span></div>
+        <div class="case-facts">
+          <div><span class="eyebrow">Задача</span><p>Аудит и&nbsp;подготовка сайта под&nbsp;GEO для&nbsp;практикующего психолога</p></div>
+          <div><span class="eyebrow">Сделано</span><p>Аудит, руководство по&nbsp;копирайтингу, <span class="nowrap">блог-статьи</span>, промпты для&nbsp;изображений, сайт переверстан</p></div>
+          <div><span class="eyebrow">Статус</span><p>Ожидает публикации</p></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Кейс 04 — Yoga Space -->
+    <article class="case-tile" data-reveal>
+      <div class="case-media case-media--dark">
+        <svg class="corner-mark" width="18" height="18"><use href="#icon-corner"></use></svg>
+        <span class="ghost-num" aria-hidden="true">04</span>
+        <a class="case-media-caption" href="https://yogaspace.ru/" target="_blank" rel="noopener">yogaspace.ru</a>
+        <h3>Yoga Space —&nbsp;управленческий дашборд</h3>
+      </div>
+      <div class="case-body">
+        <div class="case-tags"><span class="pill">Внутренний продукт</span><span class="pill">GitHub Pages</span></div>
+        <div class="case-facts">
+          <div><span class="eyebrow">Задача</span><p>Облегчить доступ к&nbsp;информации для&nbsp;администраторов и&nbsp;снизить возможное количество ошибок в&nbsp;коммуникации с&nbsp;клиентами и&nbsp;в&nbsp;ведении учёта</p></div>
+          <div><span class="eyebrow">Сделано</span><p>Дашборд собран и&nbsp;опубликован на&nbsp;GitHub Pages</p></div>
+          <div><span class="eyebrow">Статус</span><p>Согласование с&nbsp;командой и&nbsp;сбор контента</p></div>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ================= 04 — КОНТАКТЫ ================= -->
+<section class="section" id="contact" style="padding-bottom:12vh">
+  <div class="grid3 section-head" data-reveal>
+    <span class="ghost-num" aria-hidden="true">04</span>
+    <div class="section-head-title">
+      <h2>Контакты</h2>
+    </div>
+  </div>
+
+  <p class="contact-claim">Готова внедрять GEO<br>и&nbsp;<span class="nowrap">digital-инструменты</span><br>в&nbsp;вашей команде</p>
+
+  <div class="contacts grid3">
+    <button type="button" class="copy-email" data-copy="sayhellotoma@gmail.com">
+      <span class="field"><span class="eyebrow">Email</span><span class="value">sayhellotoma@gmail.com</span></span>
+      <span class="arrow-btn"><svg width="16" height="16"><use href="#icon-copy"></use></svg></span>
+    </button>
+    <a href="https://t.me/tamaranosyreva">
+      <span class="field"><span class="eyebrow">Telegram</span><span class="value">@tamaranosyreva</span></span>
+      <span class="arrow-btn">↗</span>
+    </a>
+  </div>
+
+  <div class="footer-bar">
+    <span>2026 © Тамара Носырева<br>Все права защищены</span>
+  </div>
+</section>
+
+<!-- Появление блоков при скролле -->
+<script>
+(function () {
+  var items = document.querySelectorAll('[data-reveal]');
+  if (!('IntersectionObserver' in window)) {
+    items.forEach(function (el) { el.classList.add('is-visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { rootMargin: '0px 0px -6% 0px', threshold: 0 });
+
+  items.forEach(function (el) {
+    if (el.getBoundingClientRect().top < window.innerHeight * 0.96) {
+      el.classList.add('is-visible');
+    } else {
+      io.observe(el);
+    }
+  });
+})();
+</script>
+
+<!-- Копирование email по клику -->
+<script>
+(function () {
+  var btn = document.querySelector('.copy-email');
+  if (!btn) return;
+  btn.addEventListener('click', function () {
+    var text = btn.getAttribute('data-copy');
+    var iconWrap = btn.querySelector('.arrow-btn');
+    var reset = function () {
+      iconWrap.classList.remove('is-copied');
+      iconWrap.innerHTML = '<svg width="16" height="16"><use href="#icon-copy"></use></svg>';
+    };
+    var showCopied = function () {
+      iconWrap.classList.add('is-copied');
+      iconWrap.innerHTML = '<svg width="16" height="16"><use href="#icon-check"></use></svg>';
+      clearTimeout(btn._copyTimer);
+      btn._copyTimer = setTimeout(reset, 1600);
+    };
+    var fallbackCopy = function () {
+      var tmp = document.createElement('textarea');
+      tmp.value = text;
+      tmp.style.position = 'fixed';
+      tmp.style.opacity = '0';
+      document.body.appendChild(tmp);
+      tmp.select();
+      document.execCommand('copy');
+      document.body.removeChild(tmp);
+      showCopied();
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(showCopied).catch(fallbackCopy);
+    } else {
+      fallbackCopy();
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
