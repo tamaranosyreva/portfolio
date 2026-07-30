@@ -465,17 +465,27 @@ a.case-media-caption:hover { opacity: 1; }
    МОБИЛЬНАЯ АДАПТАЦИЯ
    ============================================================ */
 @media (max-width: 860px) {
-  :root { --unit: 20px; }
+  :root { --unit: 20px; --hero-gap: 40px; }
   .site-nav { display: none; }
   .grid3 { grid-template-columns: 1fr; }
   .grid3 > * { grid-column: 1 / -1 !important; }
-  .hero { padding-top: 10vh; }
+
+  /* хиро: квадрат вместо растянутого блока, и отступы поменьше */
+  .hero { padding-top: 8vh; }
+  .hero-role-block { aspect-ratio: 1 / 1; flex: none; width: 100%; margin-top: 0; }
   .hero-aside { margin-bottom: 24px; }
-  .tools, .stack, .case-grid, .contacts { margin-top: 56px; }
-  .tools { row-gap: 40px; }
-  .case-grid { grid-template-columns: 1fr; row-gap: 64px; }
+  .hero-lede { margin-top: 28px; }
+
+  /* описание секции — отдельной строкой под заголовком, а не впритык */
+  .section-head .lede { margin-top: 16px; }
+
+  .tools, .stack, .case-grid, .contacts { margin-top: 48px; }
+  .tools, .stack, .case-grid { padding-bottom: 64px; }
+  .tools { row-gap: 32px; }
+  .case-grid { grid-template-columns: 1fr; row-gap: 48px; }
   .case-facts > div { grid-template-columns: 1fr; gap: 6px; }
-  .contact-claim { margin-top: 40px; }
+  .contact-claim { margin-top: 32px; }
+  .footer-bar { margin-top: 64px; }
 }
 </style>
 </head>
