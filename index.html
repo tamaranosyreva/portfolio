@@ -318,8 +318,8 @@ a { color: var(--ink); text-decoration: none; }
 .case-media {
   position: relative;
   overflow: hidden;
-  height: 40vh;
-  min-height: 280px;
+  height: 56vh;
+  min-height: 460px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -331,12 +331,15 @@ a { color: var(--ink); text-decoration: none; }
 }
 .case-media--dark { background: var(--ink); color: var(--paper); }
 .case-media--lime { background: var(--lime); color: var(--lime-ink); }
+/* номер кейса — всегда в правом верхнем углу, одинаково во всех карточках */
 .case-media .ghost-num {
-  top: 50%; left: 20px;
-  transform: translateY(-50%);
-  font-size: clamp(90px, 9vw, 150px);
+  top: 14px;
+  left: auto;
+  right: 20px;
+  transform: none;
+  font-size: clamp(52px, 4.6vw, 78px);
   color: currentColor;
-  opacity: .16;
+  opacity: .22;
 }
 /* заголовок кейса — теперь живёт внутри цветного блока, капсом */
 .case-media h3 {
@@ -350,9 +353,14 @@ a { color: var(--ink); text-decoration: none; }
   text-transform: uppercase;
   color: inherit;
 }
+/* подпись-адрес сайта закреплена у цифры фиксированно — не зависит
+   от того, сколько строк займёт заголовок ниже */
 .case-media-caption {
-  position: relative;
+  position: absolute;
   z-index: 1;
+  top: 50%;
+  left: 20px;
+  transform: translateY(44px);
   display: inline-block;
   font-family: var(--font-mono);
   font-size: 12px;
@@ -363,6 +371,41 @@ a { color: var(--ink); text-decoration: none; }
 }
 a.case-media-caption { text-decoration: underline; text-underline-offset: 3px; transition: opacity .2s; }
 a.case-media-caption:hover { opacity: 1; }
+
+/* ---- Карточка с мокапом ----
+   Скриншот вписан в верхнюю часть блока, подпись и заголовок — снизу.
+   Чтобы заменить картинку: положи файл в папку images/ и поменяй src.  */
+.case-media--shot { gap: 16px; }
+.case-media--shot .shot {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.case-media--shot .shot img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+/* номер уходит в угол, чтобы не спорить со скриншотом */
+.case-media--shot .ghost-num {
+  top: 14px;
+  left: auto;
+  right: 20px;
+  transform: none;
+  font-size: clamp(52px, 4.6vw, 78px);
+  opacity: .22;
+}
+/* в карточке с мокапом подпись встаёт в общий поток над заголовком */
+.case-media--shot .case-media-caption {
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
+}
 .case-media--proofs { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
 .case-media--proofs .proof {
   position: relative;
@@ -483,6 +526,9 @@ a.case-media-caption:hover { opacity: 1; }
   .tools, .stack, .case-grid { padding-bottom: 64px; }
   .tools { row-gap: 32px; }
   .case-grid { grid-template-columns: 1fr; row-gap: 48px; }
+  /* на телефоне блоки ниже: без мокапа хватает меньшей высоты */
+  .case-media { height: auto; min-height: 320px; }
+  .case-media--shot { min-height: 400px; }
   .case-facts > div { grid-template-columns: 1fr; gap: 6px; }
   .contact-claim { margin-top: 32px; }
   .footer-bar { margin-top: 64px; }
@@ -662,7 +708,8 @@ a.case-media-caption:hover { opacity: 1; }
     </div>
   </div>
 
-  <!-- плитка 2×2: чтобы добавить кейс — скопируй любой блок .case-tile -->
+  <!-- плитка по два кейса в ряд: чтобы добавить кейс — скопируй любой блок .case-tile.
+       Скриншоты лежат в папке images/ рядом с этим файлом. -->
   <div class="case-grid">
 
     <!-- Кейс 01 — SP Candle, GEO-аудит -->
@@ -683,46 +730,104 @@ a.case-media-caption:hover { opacity: 1; }
       </div>
     </article>
 
-    <!-- Кейс 02 — SP Candle, виджеты -->
+    <!-- Кейс 02 — SP Candle, каталог -->
     <article class="case-tile" data-reveal>
-      <div class="case-media case-media--dark">
+      <div class="case-media case-media--dark case-media--shot">
         <svg class="corner-mark" width="18" height="18"><use href="#icon-corner"></use></svg>
         <span class="ghost-num" aria-hidden="true">02</span>
+        <div class="shot"><img src="images/spcandle-catalog.png" alt="Карточка товара в каталоге SP Candle"></div>
         <a class="case-media-caption" href="https://spcandle.ru/" target="_blank" rel="noopener">spcandle.ru</a>
-        <h3>SP Candle —&nbsp;виджеты и&nbsp;автоматизация</h3>
+        <h3>SP Candle —&nbsp;кастомизация каталога</h3>
       </div>
       <div class="case-body">
-        <div class="case-tags"><span class="pill">Tilda</span><span class="pill">Make.com</span></div>
+        <div class="case-tags"><span class="pill">Tilda</span><span class="pill">Каталог</span><span class="pill">Make.com</span></div>
         <div class="case-facts">
           <div><span class="eyebrow">Задача</span><p>Улучшить навигацию по&nbsp;каталогу и&nbsp;конверсию</p></div>
-          <div><span class="eyebrow">Сделано</span><p>Кастомный виджет категорий, <span class="nowrap">промо-попапы</span> с&nbsp;интеграцией через&nbsp;Make.com</p></div>
+          <div><span class="eyebrow">Сделано</span><p>Карточка товара с&nbsp;галереей и&nbsp;переключением форматов аромата, кастомный виджет категорий, <span class="nowrap">промо-попапы</span> с&nbsp;интеграцией через&nbsp;Make.com</p></div>
           <div><span class="eyebrow">Статус</span><p>Запущено</p></div>
         </div>
       </div>
     </article>
 
-    <!-- Кейс 03 — GEO-консалтинг -->
+    <!-- Кейс 03 — SP Candle, гид по ароматам -->
     <article class="case-tile" data-reveal>
-      <div class="case-media case-media--lime">
-        <svg class="corner-mark" width="18" height="18" style="color:var(--ink)"><use href="#icon-corner"></use></svg>
+      <div class="case-media case-media--dark case-media--shot">
+        <svg class="corner-mark" width="18" height="18"><use href="#icon-corner"></use></svg>
         <span class="ghost-num" aria-hidden="true">03</span>
-        <h3><span class="nowrap">GEO-консалтинг</span> для&nbsp;частного специалиста</h3>
+        <div class="shot"><img src="images/spcandle-guide.png" alt="Страница гида по ароматам SP Candle"></div>
+        <a class="case-media-caption" href="https://spcandle.ru/" target="_blank" rel="noopener">spcandle.ru</a>
+        <h3>SP Candle —&nbsp;гид по&nbsp;ароматам</h3>
       </div>
       <div class="case-body">
-        <div class="case-tags"><span class="pill">Практикующий психолог</span><span class="pill">GEO</span><span class="pill">Вёрстка</span></div>
+        <div class="case-tags"><span class="pill">Дизайн</span><span class="pill">GEO</span><span class="pill">Вёрстка</span></div>
         <div class="case-facts">
-          <div><span class="eyebrow">Задача</span><p>Аудит и&nbsp;подготовка сайта под&nbsp;GEO для&nbsp;практикующего психолога</p></div>
-          <div><span class="eyebrow">Сделано</span><p>Аудит, руководство по&nbsp;копирайтингу, <span class="nowrap">блог-статьи</span>, промпты для&nbsp;изображений, сайт переверстан</p></div>
+          <div><span class="eyebrow">Задача</span><p>Помочь выбрать аромат по&nbsp;состоянию, а&nbsp;не&nbsp;по&nbsp;названию</p></div>
+          <div><span class="eyebrow">Сделано</span><p>Структура гида по&nbsp;состояниям, карточки ароматов с&nbsp;нотами, интенсивностью и&nbsp;форматами, дизайн и&nbsp;вёрстка страниц</p></div>
+          <div><span class="eyebrow">Статус</span><p>Готово</p></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Кейс 04 — Нарочито Просто, сайт -->
+    <article class="case-tile" data-reveal>
+      <div class="case-media case-media--lime case-media--shot">
+        <svg class="corner-mark" width="18" height="18" style="color:var(--ink)"><use href="#icon-corner"></use></svg>
+        <span class="ghost-num" aria-hidden="true">04</span>
+        <div class="shot"><img src="images/narochito-site.png" alt="Главная страница сайта «Нарочито Просто»"></div>
+        <a class="case-media-caption" href="https://narochito-prosto.ru/" target="_blank" rel="noopener">narochito-prosto.ru</a>
+        <h3>Нарочито Просто —&nbsp;прототип сайта</h3>
+      </div>
+      <div class="case-body">
+        <div class="case-tags"><span class="pill">Прототип</span><span class="pill">UX</span><span class="pill">Дизайн</span></div>
+        <div class="case-facts">
+          <div><span class="eyebrow">Задача</span><p>Показать форматы событий и&nbsp;сократить путь до&nbsp;заявки</p></div>
+          <div><span class="eyebrow">Сделано</span><p>Структура страниц, дизайн и&nbsp;интерактивный прототип главной с&nbsp;блоками форматов и&nbsp;цифрами о&nbsp;проекте</p></div>
+          <div><span class="eyebrow">Статус</span><p>Прототип готов, на&nbsp;согласовании</p></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Кейс 05 — Нарочито Просто, презентации -->
+    <article class="case-tile" data-reveal>
+      <div class="case-media case-media--lime case-media--shot">
+        <svg class="corner-mark" width="18" height="18" style="color:var(--ink)"><use href="#icon-corner"></use></svg>
+        <span class="ghost-num" aria-hidden="true">05</span>
+        <div class="shot"><img src="images/narochito-deck.png" alt="Слайд презентации «Нарочито Просто»"></div>
+        <h3>Нарочито Просто —&nbsp;презентации и&nbsp;КП</h3>
+      </div>
+      <div class="case-body">
+        <div class="case-tags"><span class="pill">Презентации</span><span class="pill">Дизайн</span></div>
+        <div class="case-facts">
+          <div><span class="eyebrow">Задача</span><p>Оформить коммерческие предложения так, чтобы они продавали формат события</p></div>
+          <div><span class="eyebrow">Сделано</span><p>Шаблон презентации в&nbsp;фирменном стиле, слайды под&nbsp;форматы событий, вёрстка КП</p></div>
+          <div><span class="eyebrow">Статус</span><p>Используется в&nbsp;продажах</p></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Кейс 06 — Психолог, блог -->
+    <article class="case-tile" data-reveal>
+      <div class="case-media case-media--dark case-media--shot">
+        <svg class="corner-mark" width="18" height="18"><use href="#icon-corner"></use></svg>
+        <span class="ghost-num" aria-hidden="true">06</span>
+        <div class="shot"><img src="images/psychologist-blog.png" alt="Статья в блоге на сайте психолога"></div>
+        <h3>Блог и&nbsp;статьи под&nbsp;GEO для&nbsp;психолога</h3>
+      </div>
+      <div class="case-body">
+        <div class="case-tags"><span class="pill">Практикующий психолог</span><span class="pill">GEO</span><span class="pill">Копирайтинг</span></div>
+        <div class="case-facts">
+          <div><span class="eyebrow">Задача</span><p>Сделать сайт видимым в&nbsp;AI-поиске и&nbsp;дать содержательный вход через&nbsp;блог</p></div>
+          <div><span class="eyebrow">Сделано</span><p>Аудит, руководство по&nbsp;копирайтингу, дизайн блога, <span class="nowrap">блог-статьи</span> под&nbsp;GEO, промпты для&nbsp;изображений, сайт переверстан</p></div>
           <div><span class="eyebrow">Статус</span><p>Ожидает публикации</p></div>
         </div>
       </div>
     </article>
 
-    <!-- Кейс 04 — Yoga Space -->
+    <!-- Кейс 07 — Yoga Space -->
     <article class="case-tile" data-reveal>
       <div class="case-media case-media--dark">
         <svg class="corner-mark" width="18" height="18"><use href="#icon-corner"></use></svg>
-        <span class="ghost-num" aria-hidden="true">04</span>
+        <span class="ghost-num" aria-hidden="true">07</span>
         <h3>Yoga Space —&nbsp;управленческий дашборд</h3>
       </div>
       <div class="case-body">
@@ -764,6 +869,17 @@ a.case-media-caption:hover { opacity: 1; }
     <span>2026 © Тамара Носырева<br>Все права защищены</span>
   </div>
 </section>
+
+<!-- Если файла скриншота ещё нет в папке images/ — прячем картинку,
+     чтобы вместо неё не появлялась иконка «битого» изображения -->
+<script>
+(function () {
+  document.querySelectorAll('.shot img').forEach(function (img) {
+    img.addEventListener('error', function () { img.style.display = 'none'; });
+    if (img.complete && img.naturalWidth === 0) img.style.display = 'none';
+  });
+})();
+</script>
 
 <!-- Появление блоков при скролле -->
 <script>
