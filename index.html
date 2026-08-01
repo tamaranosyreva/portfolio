@@ -160,6 +160,88 @@ a { color: var(--ink); text-decoration: none; }
 .site-nav a { color: var(--muted); transition: color .2s; }
 .site-nav a:hover { color: var(--ink); }
 
+/* ---- Мобильное меню ----
+   Кнопка-бургер и выезжающий экран с разделами и контактами.
+   На десктопе оба элемента скрыты — там работает обычная навигация. */
+.nav-toggle {
+  display: none;
+  position: relative;
+  z-index: 2;
+  margin-left: auto;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+}
+.nav-toggle span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--ink);
+  transition: transform .3s, opacity .2s, width .3s;
+}
+.nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+.mobile-menu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 120px var(--unit) 40px;
+  flex-direction: column;
+  justify-content: space-between;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .3s cubic-bezier(.2,.7,.2,1), visibility .3s;
+}
+.mobile-menu.is-open { opacity: 1; visibility: visible; }
+.mobile-menu nav { display: flex; flex-direction: column; gap: 4px; }
+.mobile-menu nav a {
+  color: var(--paper);
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -.01em;
+  text-transform: uppercase;
+  padding: 8px 0;
+}
+.mobile-menu nav a:active { color: var(--lime); }
+.mobile-menu-contacts {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-top: 1px solid rgba(255,255,255,.18);
+  padding-top: 24px;
+}
+.mobile-menu-contacts a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--lime);
+  font-family: var(--font-mono);
+  font-size: 15px;
+}
+.mobile-menu-contacts .label {
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+}
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu, .nav-toggle span { transition: none; }
+}
+
 /* ============================================================
    ХИРО
    ============================================================ */
@@ -494,7 +576,19 @@ a.case-media-caption:hover { opacity: 1; }
    ============================================================ */
 @media (max-width: 860px) {
   :root { --unit: 20px; --hero-gap: 80px; }
+  /* вместо строки разделов — бургер и выезжающее меню */
   .site-nav { display: none; }
+  /* логотип и кнопку выравниваем по центру: по базовой линии они разъезжаются */
+  .site-header { align-items: center; }
+  .nav-toggle { display: flex; }
+  .mobile-menu { display: flex; }
+  body.menu-open { overflow: hidden; }
+  /* при открытом меню шапка сливается с ним: фон убираем, логотип и бургер — белые.
+     Правила живут внутри медиа-запроса: на десктопе меню не существует,
+     и даже если класс останется на body, шапка не побелеет. */
+  body.menu-open .site-header { background: transparent; backdrop-filter: none; border-bottom-color: transparent; }
+  body.menu-open .site-header .brand { color: var(--lime); }
+  body.menu-open .nav-toggle span { background: var(--paper); }
   .grid3 { grid-template-columns: 1fr; }
   .grid3 > * { grid-column: 1 / -1 !important; }
 
@@ -545,7 +639,26 @@ a.case-media-caption:hover { opacity: 1; }
     <a href="#cases">Кейсы</a>
     <a href="#contact">Контакты</a>
   </nav>
+
+  <!-- бургер: виден только на телефоне -->
+  <button class="nav-toggle" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu">
+    <span></span><span></span><span></span>
+  </button>
 </header>
+
+<!-- ================= МОБИЛЬНОЕ МЕНЮ ================= -->
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <nav>
+    <a href="#geo">Digital &amp; GEO</a>
+    <a href="#stack">Программы</a>
+    <a href="#cases">Кейсы</a>
+    <a href="#contact">Контакты</a>
+  </nav>
+  <div class="mobile-menu-contacts">
+    <a href="mailto:sayhellotoma@gmail.com"><span class="label">Email</span>sayhellotoma@gmail.com</a>
+    <a href="https://t.me/tamaranosyreva"><span class="label">Telegram</span>@tamaranosyreva</a>
+  </div>
+</div>
 
 <!-- ================= ХИРО ================= -->
 <section class="hero">
@@ -857,6 +970,43 @@ a.case-media-caption:hover { opacity: 1; }
   document.querySelectorAll('.shot img').forEach(function (img) {
     img.addEventListener('error', function () { img.style.display = 'none'; });
     if (img.complete && img.naturalWidth === 0) img.style.display = 'none';
+  });
+})();
+</script>
+
+<!-- Мобильное меню: открытие, закрытие по ссылке и по Esc -->
+<script>
+(function () {
+  var toggle = document.querySelector('.nav-toggle');
+  var menu = document.getElementById('mobile-menu');
+  if (!toggle || !menu) return;
+
+  function setOpen(open) {
+    menu.classList.toggle('is-open', open);
+    menu.setAttribute('aria-hidden', open ? 'false' : 'true');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+    document.body.classList.toggle('menu-open', open);
+  }
+
+  toggle.addEventListener('click', function () {
+    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+  });
+
+  menu.querySelectorAll('a').forEach(function (link) {
+    link.addEventListener('click', function () { setOpen(false); });
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && menu.classList.contains('is-open')) {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
+
+  // если экран расширили до десктопа — меню не должно остаться открытым
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 860 && menu.classList.contains('is-open')) setOpen(false);
   });
 })();
 </script>
