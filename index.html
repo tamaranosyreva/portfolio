@@ -326,26 +326,28 @@ a { color: var(--ink); text-decoration: none; }
   align-items: flex-start;
   gap: 12px;
   padding: 20px;
-  background: var(--line);
-  color: var(--ink);
+  /* все карточки кейсов — на чёрном: светлые мокапы на нём читаются лучше всего */
+  background: var(--ink);
+  color: var(--paper);
 }
-.case-media--dark { background: var(--ink); color: var(--paper); }
-.case-media--lime { background: var(--lime); color: var(--lime-ink); }
-/* номер кейса — всегда в правом верхнем углу, одинаково во всех карточках */
+/* номер кейса — салатовый, в правом верхнем углу, отступы сверху и сбоку равны */
 .case-media .ghost-num {
-  top: 14px;
+  top: 20px;
   left: auto;
   right: 20px;
   transform: none;
   font-size: clamp(44px, 3.6vw, 62px);
-  color: currentColor;
-  opacity: .22;
+  color: var(--lime);
+  opacity: 1;
 }
-/* заголовок кейса — теперь живёт внутри цветного блока, капсом */
+/* заголовок кейса — капсом, бренд отдельной строкой сверху.
+   min-height держит место под две строки, чтобы мокапы во всех
+   карточках получались одного размера. */
 .case-media h3 {
   position: relative;
   z-index: 1;
   margin: 0;
+  min-height: 2.16em;
   font-size: clamp(24px, 2.4vw, 34px);
   line-height: 1.08;
   letter-spacing: -.01em;
@@ -353,6 +355,7 @@ a { color: var(--ink); text-decoration: none; }
   text-transform: uppercase;
   color: inherit;
 }
+.case-media h3 .brand { display: block; }
 /* подпись-адрес сайта — в общем потоке, прямо над заголовком */
 .case-media-caption {
   position: relative;
@@ -523,9 +526,6 @@ a.case-media-caption:hover { opacity: 1; }
 <!-- иконка-уголок, переиспользуется на медиа-блоках -->
 <svg width="0" height="0" style="position:absolute">
   <defs>
-    <symbol id="icon-corner" viewBox="0 0 24 24">
-      <path d="M2 2H22V22" fill="none" stroke="currentColor" stroke-width="1.6"/>
-    </symbol>
     <symbol id="icon-copy" viewBox="0 0 24 24">
       <rect x="8.5" y="8.5" width="12" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>
       <path d="M15.5 8.5V5.5a1.5 1.5 0 0 0-1.5-1.5H5a1.5 1.5 0 0 0-1.5 1.5V15a1.5 1.5 0 0 0 1.5 1.5h3" fill="none" stroke="currentColor" stroke-width="1.6"/>
@@ -696,11 +696,11 @@ a.case-media-caption:hover { opacity: 1; }
 
     <!-- Кейс 01 — SP Candle, GEO-аудит -->
     <article class="case-tile" data-reveal>
-      <div class="case-media case-media--lime">
-        <svg class="corner-mark" width="18" height="18" style="color:var(--ink)"><use href="#icon-corner"></use></svg>
+      <div class="case-media case-media--shot">
         <span class="ghost-num" aria-hidden="true">01</span>
+        <div class="shot"><img src="spcandle-gifts.png" alt="Страница подборки подарков SP Candle"></div>
         <a class="case-media-caption" href="https://spcandle.ru/" target="_blank" rel="noopener">spcandle.ru</a>
-        <h3>SP Candle —&nbsp;<span class="nowrap">GEO-аудит</span> и&nbsp;техническая оптимизация</h3>
+        <h3><span class="brand">SP Candle</span><span class="nowrap">GEO-аудит</span> и&nbsp;оптимизация</h3>
       </div>
       <div class="case-body">
         <div class="case-tags"><span class="pill">E-commerce</span><span class="pill">GEO</span></div>
@@ -714,12 +714,11 @@ a.case-media-caption:hover { opacity: 1; }
 
     <!-- Кейс 02 — SP Candle, каталог -->
     <article class="case-tile" data-reveal>
-      <div class="case-media case-media--dark case-media--shot">
-        <svg class="corner-mark" width="18" height="18"><use href="#icon-corner"></use></svg>
+      <div class="case-media case-media--shot">
         <span class="ghost-num" aria-hidden="true">02</span>
         <div class="shot"><img src="spcandle-catalog.png" alt="Карточка товара в каталоге SP Candle"></div>
         <a class="case-media-caption" href="https://spcandle.ru/" target="_blank" rel="noopener">spcandle.ru</a>
-        <h3>SP Candle —&nbsp;кастомизация каталога</h3>
+        <h3><span class="brand">SP Candle</span>Кастомизация каталога</h3>
       </div>
       <div class="case-body">
         <div class="case-tags"><span class="pill">Tilda</span><span class="pill">Каталог</span><span class="pill">Make.com</span></div>
@@ -733,12 +732,11 @@ a.case-media-caption:hover { opacity: 1; }
 
     <!-- Кейс 03 — SP Candle, гид по ароматам -->
     <article class="case-tile" data-reveal>
-      <div class="case-media case-media--dark case-media--shot">
-        <svg class="corner-mark" width="18" height="18"><use href="#icon-corner"></use></svg>
+      <div class="case-media case-media--shot">
         <span class="ghost-num" aria-hidden="true">03</span>
         <div class="shot"><img src="spcandle-guide.png" alt="Страница гида по ароматам SP Candle"></div>
         <a class="case-media-caption" href="https://spcandle.ru/" target="_blank" rel="noopener">spcandle.ru</a>
-        <h3>SP Candle —&nbsp;гид по&nbsp;ароматам</h3>
+        <h3><span class="brand">SP Candle</span>Гид по&nbsp;ароматам</h3>
       </div>
       <div class="case-body">
         <div class="case-tags"><span class="pill">Дизайн</span><span class="pill">GEO</span><span class="pill">Вёрстка</span></div>
@@ -752,12 +750,11 @@ a.case-media-caption:hover { opacity: 1; }
 
     <!-- Кейс 04 — Нарочито Просто, сайт -->
     <article class="case-tile" data-reveal>
-      <div class="case-media case-media--lime case-media--shot">
-        <svg class="corner-mark" width="18" height="18" style="color:var(--ink)"><use href="#icon-corner"></use></svg>
+      <div class="case-media case-media--shot">
         <span class="ghost-num" aria-hidden="true">04</span>
         <div class="shot"><img src="narochito-site.png" alt="Главная страница сайта «Нарочито Просто»"></div>
         <a class="case-media-caption" href="https://narochito-prosto.ru/" target="_blank" rel="noopener">narochito-prosto.ru</a>
-        <h3>Нарочито Просто —&nbsp;прототип сайта</h3>
+        <h3><span class="brand">Нарочито Просто</span>Прототип сайта</h3>
       </div>
       <div class="case-body">
         <div class="case-tags"><span class="pill">Прототип</span><span class="pill">UX</span><span class="pill">Дизайн</span></div>
@@ -771,11 +768,11 @@ a.case-media-caption:hover { opacity: 1; }
 
     <!-- Кейс 05 — Нарочито Просто, презентации -->
     <article class="case-tile" data-reveal>
-      <div class="case-media case-media--lime case-media--shot">
-        <svg class="corner-mark" width="18" height="18" style="color:var(--ink)"><use href="#icon-corner"></use></svg>
+      <div class="case-media case-media--shot">
         <span class="ghost-num" aria-hidden="true">05</span>
         <div class="shot"><img src="narochito-deck.png" alt="Слайд презентации «Нарочито Просто»"></div>
-        <h3>Нарочито Просто —&nbsp;презентации и&nbsp;КП</h3>
+        <span class="case-media-caption" aria-hidden="true">&nbsp;</span>
+        <h3><span class="brand">Нарочито Просто</span>Презентации и&nbsp;КП</h3>
       </div>
       <div class="case-body">
         <div class="case-tags"><span class="pill">Презентации</span><span class="pill">Дизайн</span></div>
@@ -789,10 +786,10 @@ a.case-media-caption:hover { opacity: 1; }
 
     <!-- Кейс 06 — Психолог, блог -->
     <article class="case-tile" data-reveal>
-      <div class="case-media case-media--dark case-media--shot">
-        <svg class="corner-mark" width="18" height="18"><use href="#icon-corner"></use></svg>
+      <div class="case-media case-media--shot">
         <span class="ghost-num" aria-hidden="true">06</span>
         <div class="shot"><img src="psychologist-blog.png" alt="Статья в блоге на сайте психолога"></div>
+        <span class="case-media-caption" aria-hidden="true">&nbsp;</span>
         <h3>Блог и&nbsp;статьи под&nbsp;GEO для&nbsp;психолога</h3>
       </div>
       <div class="case-body">
@@ -807,10 +804,11 @@ a.case-media-caption:hover { opacity: 1; }
 
     <!-- Кейс 07 — Yoga Space -->
     <article class="case-tile" data-reveal>
-      <div class="case-media case-media--dark">
-        <svg class="corner-mark" width="18" height="18"><use href="#icon-corner"></use></svg>
+      <div class="case-media case-media--shot">
         <span class="ghost-num" aria-hidden="true">07</span>
-        <h3>Yoga Space —&nbsp;управленческий дашборд</h3>
+        <div class="shot"><img src="yogaspace-base.png" alt="База знаний администратора Yoga Space"></div>
+        <span class="case-media-caption" aria-hidden="true">&nbsp;</span>
+        <h3><span class="brand">Yoga Space</span>Управленческий дашборд</h3>
       </div>
       <div class="case-body">
         <div class="case-tags"><span class="pill">Внутренний продукт</span><span class="pill">GitHub Pages</span></div>
