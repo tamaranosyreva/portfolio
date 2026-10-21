@@ -161,11 +161,12 @@ body[data-case] .proof { padding-top: 24px; }  /* до «Пути покупат
 a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
 
 /* --- Стрелки ------------------------------------------------------------ */
-.arrow { width: 72px; height: 72px; color: var(--accent); flex: none; display: block; }
+.arrow { width: 72px; height: 72px; color: var(--accent); flex: none; display: block; overflow: visible; }  /* угол стрелки — на линиях клетки */
 .arrow--end { justify-self: end; color: currentColor; }
 .card__media .arrow--end { justify-self: end; }
 .arrow--sm { width: 16px; height: 16px; display: inline-block; vertical-align: -2px; color: currentColor; }
 .arrow--md { width: 20px; height: 20px; }
+.arrow--back { width: 12px; height: 12px; vertical-align: -1px; margin-right: 4px; }
 
 /* --- Списки ------------------------------------------------------------- */
 .list li { position: relative; padding-left: 24px; }
@@ -288,7 +289,7 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
    ========================================================================== */
 .contact__body { display: grid; row-gap: 96px; }
 .contact__title { grid-column: 1 / 11; }
-.contact__arrow { grid-column: 12; justify-self: end; transform: rotate(180deg); }
+.contact__arrow { grid-column: 12; justify-self: end; }  /* стрелка «назад» (i-arrow-back): угол слева сверху — на линиях клетки */
 .contact__list { grid-column: 1 / 13; display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); column-gap: var(--gap); }
 .citem { grid-column: span 4; border-top: 1px solid var(--line-strong); padding-bottom: 23px; display: grid; grid-template-rows: 23px 24px 24px; align-content: start; }
 .citem > :last-child { grid-row: 3; align-self: center; }
