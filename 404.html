@@ -14,6 +14,9 @@
 <script src="/assets/js/main.js"></script>
 <style>
   html { background: none; }  /* страница короткая: клетка body — на всё окно */
+  /* ссылки в тексте: при наведении полоса уезжает, как везде, а текст становится синим */
+  .lead .u-link { transition: background-size .25s, color .25s; }
+  .lead .u-link:hover { color: var(--accent); }
   /* планшет: фото нет — текст от левого края, как заголовок */
   @media screen and (min-width: 768px) and (max-width: 1199px) {
     .hero__bottom { grid-template-columns: minmax(0, 1fr) auto; }
