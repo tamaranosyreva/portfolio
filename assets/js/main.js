@@ -2,10 +2,16 @@
 // 2) Клетка: десктоп — холст 1464px, масштабируется под ширину окна; на узких экранах
 //    ширина контента кратна клетке. Блоки с линиями доравниваются до целых клеток,
 //    чтобы каждая линия и край совпадали с линией клетки.
+// 3) Анимации: заголовки появляются по словам, большие стрелки рисуются линией,
+//    линии клетки подсвечиваются вокруг курсора.
 (function () {
   var root = document.documentElement;
   var accent = new URLSearchParams(location.search).get('accent');
   if (accent === 'yellow' || accent === 'lilac') root.dataset.accent = accent;
+
+  // Анимации — только если в системе не включено «Уменьшить движение» и это не печать в PDF
+  var animate = !matchMedia('(prefers-reduced-motion: reduce)').matches && !root.dataset.print;
+  if (animate) root.classList.add('js-anim');
 
   var C = 24, CANVAS = 1464, FLUID_MAX = 1199;
   var HMIN = 792;   // главная: минимальная высота первого экрана (33 клетки) — его содержимое в неё помещается
@@ -188,6 +194,73 @@
     }, { passive: true });
   }
 
+  // Заголовки по словам: каждое слово — в .aw со своей задержкой. Неразрывные пробелы
+  // остаются внутри слова, поэтому переносы строк те же, что без анимации.
+  function splitWords(h) {
+    var walker = document.createTreeWalker(h, NodeFilter.SHOW_TEXT), nodes = [], n, i = 0;
+    while ((n = walker.nextNode())) nodes.push(n);
+    nodes.forEach(function (t) {
+      var frag = document.createDocumentFragment();
+      t.textContent.split(/( +)/).forEach(function (p) {
+        if (!p) return;
+        if (/^ +$/.test(p)) { frag.appendChild(document.createTextNode(p)); return; }
+        var w = document.createElement('span');
+        w.className = 'aw';
+        w.textContent = p;
+        w.style.setProperty('--d', (i++ * 0.07).toFixed(2) + 's');
+        frag.appendChild(w);
+      });
+      t.parentNode.replaceChild(frag, t);
+    });
+  }
+
+  // Заголовки и большие стрелки запускаются, когда появляются на экране
+  function reveal() {
+    var targets = document.querySelectorAll('.h1, .h2, .arrow');
+    if (!('IntersectionObserver' in window)) {
+      targets.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    targets.forEach(function (el) { io.observe(el); });
+  }
+
+  // Клетка за курсором: копия сетки ярче, видна кругом вокруг курсора; клетка под ним закрашена.
+  // Только там, где есть мышь.
+  function gridGlow() {
+    if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    var glow = document.createElement('div'), cell = document.createElement('div');
+    glow.className = 'grid-glow';
+    glow.setAttribute('aria-hidden', 'true');
+    cell.className = 'grid-glow__cell';
+    glow.appendChild(cell);
+    document.body.insertBefore(glow, document.body.firstChild);
+    var x = 0, y = 0, raf = 0;
+    function move() {
+      raf = 0;
+      // внутри body, увеличенного через zoom, координаты делим на масштаб
+      var z = document.body.classList.contains('is-canvas') ? zoom() : 1;
+      var px = x / z, py = y / z;
+      var gx = parseFloat(getComputedStyle(glow).backgroundPositionX) || 0;
+      glow.style.setProperty('--mx', px + 'px');
+      glow.style.setProperty('--my', py + 'px');
+      cell.style.left = Math.floor((px - gx) / C) * C + gx + 'px';
+      cell.style.top = Math.floor(py / C) * C + 'px';
+      glow.classList.add('is-on');
+    }
+    document.addEventListener('mousemove', function (e) {
+      x = e.pageX; y = e.pageY;
+      if (!raf) raf = requestAnimationFrame(move);
+    }, { passive: true });
+    document.documentElement.addEventListener('mouseleave', function () { glow.classList.remove('is-on'); });
+  }
+
   var mode = null, t;
   function onResize() {
     var vw = root.clientWidth;
@@ -197,8 +270,15 @@
 
   function start() {
     mode = root.clientWidth > FLUID_MAX ? 'canvas' : 'fluid';
+    // слова разбиваем до выравнивания: snap() меряет уже итоговые заголовки
+    if (animate) document.querySelectorAll('.h1, .h2').forEach(splitWords);
     snap();
     stickyHead();
+    if (animate) {
+      reveal();
+      gridGlow();
+      root.classList.add('anim-go');
+    }
     window.addEventListener('resize', onResize);
   }
   document.addEventListener('DOMContentLoaded', function () {
