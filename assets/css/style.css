@@ -493,7 +493,7 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
 
 /* Живые стрелки: большие рисуются линией при появлении, маленькие у ссылок сдвигаются по направлению */
 .js-anim .arrow { stroke-dasharray: 100; stroke-dashoffset: 100; }
-.js-anim .arrow.in { stroke-dashoffset: 0; transition: stroke-dashoffset 1s cubic-bezier(.6, 0, .2, 1) .15s, transform .3s cubic-bezier(.2, .7, .2, 1); }
+.js-anim .arrow.in { stroke-dashoffset: 0; transition: stroke-dashoffset 1.6s cubic-bezier(.6, 0, .2, 1) .2s, transform .3s cubic-bezier(.2, .7, .2, 1); }
 .arrow--sm, .card .arrow { transition: transform .3s cubic-bezier(.2, .7, .2, 1); }
 .card:hover .arrow--end { transform: translate(6px, 6px); }
 a:hover > .arrow--sm:not(.arrow--back) { transform: translate(3px, -3px); }
