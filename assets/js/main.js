@@ -153,6 +153,44 @@
     root.dataset.snapped = '1';
   }
 
+  // Закреплённое меню: копия шапки первого экрана. При прокрутке вниз прячется, при прокрутке
+  // вверх выезжает сверху. Сама шапка остаётся в сетке; вверху страницы копия стоит ровно
+  // поверх неё, поэтому прячется без анимации — подмену не видно.
+  function stickyHead() {
+    var head = document.querySelector('.head');
+    if (!head) return;
+    var bar = document.createElement('div');
+    bar.className = 'head-bar';
+    bar.setAttribute('aria-hidden', 'true');   // для экранных дикторов и клавиатуры есть сама шапка
+    var copy = head.cloneNode(true);
+    // без отступов, которые snap() поставил самой шапке: копия раскладывается заново
+    [copy].concat([].slice.call(copy.querySelectorAll('[style]'))).forEach(function (el) { el.removeAttribute('style'); });
+    copy.querySelectorAll('a').forEach(function (a) { a.tabIndex = -1; });
+    bar.appendChild(copy);
+    document.body.appendChild(bar);
+
+    var lastY = window.scrollY, ticking = false;
+    function update() {
+      ticking = false;
+      var y = window.scrollY;
+      bar.style.setProperty('--bar-y', -((y / zoom()) % C) + 'px');
+      if (head.getBoundingClientRect().top >= 0) {         // шапка на месте — копия не нужна
+        bar.classList.add('is-instant');
+        bar.classList.remove('is-shown');
+        lastY = y;
+        return;
+      }
+      bar.classList.remove('is-instant');
+      if (y < lastY - 4) bar.classList.add('is-shown');      // вверх
+      else if (y > lastY + 4) bar.classList.remove('is-shown'); // вниз
+      else return;
+      lastY = y;
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+  }
+
   var mode = null, t;
   function onResize() {
     var vw = root.clientWidth;
@@ -163,6 +201,7 @@
   function start() {
     mode = root.clientWidth > FLUID_MAX ? 'canvas' : 'fluid';
     snap();
+    stickyHead();
     window.addEventListener('resize', onResize);
   }
   document.addEventListener('DOMContentLoaded', function () {
