@@ -8,14 +8,15 @@
    он же — страница PDF. main.js доравнивает блоки до целых клеток.
    ========================================================================== */
 
-@font-face { font-family: "Gilroy"; font-weight: 300; font-display: swap;
-  src: local("Gilroy-Light"), url("../fonts/Gilroy-Light.woff2") format("woff2"); }
-@font-face { font-family: "Gilroy"; font-weight: 400; font-display: swap;
-  src: local("Gilroy-Regular"), url("../fonts/Gilroy-Regular.woff2") format("woff2"); }
+/* Grid Sans — Raleway (SIL OFL 1.1, assets/fonts/GridSans-OFL.txt) под другим именем:
+   имя Raleway зарезервировано лицензией. Толщина линий как у Gilroy, заглавные 0,7 кегля,
+   вертикальные метрики как были у Gilroy, цифры обычные (не «старого стиля») */
+@font-face { font-family: "Grid Sans"; font-weight: 300; font-display: swap;
+  src: url("../fonts/GridSans-Light.woff2") format("woff2"); }
+@font-face { font-family: "Grid Sans"; font-weight: 400; font-display: swap;
+  src: url("../fonts/GridSans-Regular.woff2") format("woff2"); }
 @font-face { font-family: "NP Logo"; font-weight: 700; font-display: block;
   src: url("../fonts/OpenSans-Bold-logo.woff2") format("woff2"); }
-@font-face { font-family: "Gilroy"; font-weight: 500; font-display: swap;
-  src: local("Gilroy-Medium"), url("../fonts/Gilroy-Medium.woff2") format("woff2"); }
 
 /* --- Токены ------------------------------------------------------------- */
 :root {
@@ -38,7 +39,7 @@
   --pad: 24px;               /* поле экрана — 1 клетка */
   --gap: 24px;               /* межколонник — 1 клетка */
 
-  --f: "Gilroy", "Onest", "Manrope", system-ui, -apple-system, sans-serif;
+  --f: "Grid Sans", "Onest", "Manrope", system-ui, -apple-system, sans-serif;
 }
 :root[data-accent="yellow"] { --accent: #F2C230; --accent-ink: #141414; --accent-soft: rgba(242, 194, 48, .3); }
 :root[data-accent="lilac"]  { --accent: #A996E0; --accent-ink: #141414; --accent-soft: rgba(169, 150, 224, .3); }
@@ -125,10 +126,10 @@ body[data-case] .proof { padding-top: 24px; }  /* до «Пути покупат
 
 /* --- Типографика -------------------------------------------------------- */
 .idx { font-size: 12px; line-height: 24px; font-weight: 400; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
-/* Крупный текст «вписан в клетки»: высота заглавных Gilroy = 0,7 кегля, поэтому
+/* Крупный текст «вписан в клетки»: высота заглавных = 0,7 кегля, поэтому
    кегль = N клеток / 0,7. Блок обрезается сверху по заглавным, снизу по базовой линии —
-   отрицательными отступами из метрик шрифта (Gilroy Regular: верх строки 0,775 / низ 0,225 кегля;
-   Gilroy Light: 0,913 / 0,24). Так базовая линия ложится на линию клетки в любом браузере. */
+   отрицательными отступами из метрик шрифта (Regular: верх строки 0,775 / низ 0,225 кегля;
+   Light: 0,913 / 0,24). Так базовая линия ложится на линию клетки в любом браузере. */
 .h1 { --f: calc(72px / .7); --l: 96px; letter-spacing: -0.045em; }
 .h2 { --f: calc(48px / .7); --l: 72px; letter-spacing: -0.04em; }
 .h1, .h2, .result, .citem a.big { font-size: var(--f); line-height: var(--l);
