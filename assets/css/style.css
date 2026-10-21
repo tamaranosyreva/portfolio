@@ -93,7 +93,7 @@ body.is-canvas { zoom: var(--z, 1); }
    задан по блокам и проверен замером. */
 .block { padding-top: 48px; padding-bottom: 48px; grid-template-rows: auto; row-gap: 0; align-content: start; }
 #about, #scenarios, #contacts { padding-top: 72px; }
-#cases { padding-top: 72px; }
+#tools { padding-top: 72px; }   /* «Кейсы» идут сразу после «Обо мне» — у них отступ по умолчанию, 2 клетки */
 /* Страницы кейсов: экраны по высоте содержимого, снизу 2 клетки */
 body[data-case] .screen { padding-bottom: 48px; }
 body[data-case] .proof { padding-top: 24px; }  /* до «Пути покупателя» ближе, чем между блоками главной */
@@ -447,8 +447,8 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
   /* между блоками главной — 3 клетки: от последней строки блока до заглавных следующего заголовка */
   .hero, .block { padding-bottom: 0; }
   .block.contact { padding-bottom: 48px; }
-  .block, #about, #scenarios, #contacts, #cases { padding-top: 72px; }
-  #tools { padding-top: 48px; }  /* «Обо мне» кончается пустой клеткой под последним пунктом */
+  .block, #about, #scenarios, #contacts, #tools { padding-top: 72px; }
+  #cases { padding-top: 48px; }  /* «Обо мне» кончается пустой клеткой под последним пунктом */
   /* первый экран: от заголовка до фото и от фото до текста — по 2 клетки */
   .hero__body { grid-template-rows: auto; row-gap: 48px; }
   .hero__body > div:empty { display: none; }
