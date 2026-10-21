@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Страница не найдена — Тамара Носырева</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/GridSans-Light.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/GridSans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/style.css">
+<script src="/assets/js/main.js"></script>
+<style>
+  html { background: none; }  /* страница короткая: клетка body — на всё окно */
+  /* планшет: фото нет — текст от левого края, как заголовок */
+  @media screen and (min-width: 768px) and (max-width: 1199px) {
+    .hero__bottom { grid-template-columns: minmax(0, 1fr) auto; }
+    .hero__bottom > .hero__sub { grid-column: 1 !important; }
+    .hero__bottom > .hero__meta { grid-column: 2 !important; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 72 72" overflow="visible"><path d="M30 68.5H68.5V30" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="miter"/><path d="M22 22 64 64" fill="none" stroke="currentColor" stroke-width="9"/></symbol>
+</svg>
+
+<!-- ===================== 404 · страница не найдена ===================== -->
+<section class="screen hero" id="top">
+  <header class="head">
+    <a class="head__name" href="/">Тамара Носырева</a>
+    <nav class="head__nav" aria-label="Навигация">
+      <a href="/#about">Обо мне</a><a href="/#cases">Кейсы</a><a href="/#tools">Инструменты</a><a href="/#contacts">Контакты</a>
+    </nav>
+  </header>
+
+  <div class="hero__body">
+    <div class="hero__top">
+      <h1 class="h1 hero__title">Такой страницы нет</h1>
+      <svg class="arrow hero__arrow" aria-hidden="true"><use href="#i-arrow"/></svg>
+    </div>
+    <div></div>
+    <div class="hero__bottom">
+      <div class="hero__sub">
+        <p class="lead">Возможно, ссылка устарела или&nbsp;в&nbsp;адресе опечатка. Начните с&nbsp;<a class="u-link" href="/">главной</a> или&nbsp;посмотрите <a class="u-link" href="/#cases">кейсы</a>.</p>
+      </div>
+      <div class="hero__meta idx">
+        <a class="u-link" href="/">На главную</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+# Сайт открыт для поисковых систем и нейросетей целиком.
+
+User-agent: *
+Allow: /
+
+# Поисковые и ИИ-боты — разрешены явно, чтобы сайт попадал в выдачу и ответы нейросетей
+User-agent: Yandex
+User-agent: Googlebot
+User-agent: Google-Extended
+User-agent: Bingbot
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Applebot
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://tamaranosyreva.ru/sitemap.xml
