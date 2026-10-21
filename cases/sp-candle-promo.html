@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SP CANDLE: акция «Вместе дешевле» в корзине Tilda — кейс Тамары Носыревой</title>
+<meta name="description" content="Кейс: акция «Вместе дешевле» для интернет-магазина на Tilda — скидка 10% за 2 и 15% за 3 товара одного формата, ароматы можно смешивать, скидка считается в корзине автоматически.">
+<link rel="preload" href="../assets/fonts/Gilroy-Light.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/Gilroy-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/css/style.css">
+<script src="../assets/js/main.js"></script>
+</head>
+<body data-case="1">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 72 72"><path d="M20 58.5H58.5V20" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="miter"/><path d="M12 12 54 54" fill="none" stroke="currentColor" stroke-width="9"/></symbol>
+  <symbol id="i-flow" viewBox="0 0 28 10"><path d="M0 5h26M22 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1"/></symbol>
+  <symbol id="i-link" viewBox="0 0 16 16"><path d="M3 13 13 3M5 3h8v8" fill="none" stroke="currentColor" stroke-width="1.2"/></symbol>
+</svg>
+
+<!-- ===================== Кейс 06 · описание ===================== -->
+<section class="screen case" id="case">
+  <header class="head">
+    <a class="head__name" href="../index.html">Тамара Носырева</a>
+    <nav class="head__nav" aria-label="Навигация">
+      <a href="../index.html#cases">← Все&nbsp;кейсы</a><a href="#proof">Подтверждения</a><a href="../index.html#contacts">Контакты</a>
+    </nav>
+  </header>
+
+  <div class="case__body">
+    <div class="grid">
+      <div class="case__titlebox">
+        <div class="pills"><span class="pill">Промо</span><span class="pill">Tilda</span><span class="pill">JavaScript</span></div>
+        <h1 class="h2">Акция «Вместе дешевле», которая считается сама</h1>
+      </div>
+      <div class="case__meta small">
+        <div class="meta__row"><span class="idx">Клиент</span><span><span>SP CANDLE<br>ароматы для&nbsp;дома</span></span></div>
+        <div class="meta__row"><span class="idx">Роль</span><span><span>Механика и&nbsp;разработка</span></span></div>
+        <div class="meta__row"><span class="idx">Сайт</span><span><a class="meta__link" href="https://spcandle.ru" target="_blank" rel="noopener">spcandle.ru <svg class="arrow--sm"><use href="#i-link"/></svg></a></span></div>
+      </div>
+    </div>
+
+    <div class="case__blocks">
+      <div class="cblock">
+        <span class="idx cblock__num">(01)</span>
+        <h3 class="h3">Контекст</h3>
+        <p class="small">SP CANDLE продаёт свечи, диффузоры и&nbsp;автопарфюм в&nbsp;нескольких форматах и&nbsp;десятках ароматов. Магазину нужна была акция за&nbsp;комплект, а&nbsp;такой механики в&nbsp;Tilda из&nbsp;коробки нет.</p>
+      </div>
+      <div class="cblock">
+        <span class="idx cblock__num">(02)</span>
+        <h3 class="h3">Задача</h3>
+        <p class="small">Мотивировать покупать больше: дать скидку за&nbsp;2&nbsp;и&nbsp;3&nbsp;товара одного формата и&nbsp;разрешить смешивать ароматы.</p>
+      </div>
+      <div class="cblock">
+        <span class="idx cblock__num">(03)</span>
+        <h3 class="h3">Моё решение</h3>
+        <ul class="list small">
+          <li>Скидка 10% за&nbsp;2&nbsp;шт и&nbsp;15% за&nbsp;3&nbsp;шт на&nbsp;весь комплект</li>
+          <li>Ароматы одного формата можно смешивать</li>
+          <li>Подсказка в&nbsp;карточке: «Выберите 2&nbsp;или&nbsp;3&nbsp;свечи&nbsp;— и&nbsp;скидка посчитается сама»</li>
+          <li>Кнопка «Другие ароматы этого формата» и&nbsp;метка «Хочу скидку 15%» в&nbsp;каталоге</li>
+        </ul>
+      </div>
+      <div class="cblock">
+        <span class="idx cblock__num">(04)</span>
+        <h3 class="h3">Техническая реализация</h3>
+        <ul class="list small">
+          <li>Собственный скрипт на&nbsp;JavaScript в&nbsp;корзине Tilda</li>
+          <li>Скидка пересчитывается сама при&nbsp;каждом изменении корзины</li>
+          <li>Акция работает на&nbsp;116&nbsp;товаров</li>
+          <li>Правила встроены в&nbsp;расчёт: не&nbsp;суммируется с&nbsp;промокодами, архивные ароматы, наборы, сертификаты и&nbsp;сопутствующие товары не&nbsp;участвуют</li>
+        </ul>
+      </div>
+      <div class="cblock">
+        <span class="idx cblock__num">(05)</span>
+        <h3 class="h3">Стек</h3>
+        <div class="pills"><span class="pill">Tilda</span><span class="pill">JavaScript</span></div>
+      </div>
+      <div class="cblock cblock--result">
+        <span class="idx cblock__num">(06)</span>
+        <h3 class="h3">Результат</h3>
+        <p class="small"><span class="mark">Скидка за&nbsp;комплект считается в&nbsp;корзине автоматически</span>&nbsp;— на&nbsp;116&nbsp;товаров, без&nbsp;промокодов и&nbsp;ручного пересчёта.</p>
+      </div>
+    </div>
+  </div>
+  <a class="arrow case__more" href="#proof" aria-label="Дальше"><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+</section>
+
+<!-- ===================== Кейс 06 · подтверждения ===================== -->
+<section class="screen block proof" id="proof">
+
+  <div class="proof__body">
+    <div class="grid proof__top">
+      <h2 class="h2" style="grid-column:1/9">Путь покупателя</h2>
+    </div>
+
+    <ol class="steps">
+      <li class="step">
+        <div class="step__head"><span class="step__num">01</span><span class="pill">Каталог</span><svg class="flow__arrow" aria-hidden="true"><use href="#i-flow"/></svg></div>
+        <div class="shot__frame"><img src="../assets/img/spc-promo-catalog.jpg" alt="Каталог SP CANDLE с меткой «Хочу скидку 15%»" loading="lazy"></div>
+        <p class="step__text small">В&nbsp;каталоге у&nbsp;товаров акции метка «Хочу скидку 15%».</p>
+      </li>
+      <li class="step">
+        <div class="step__head"><span class="step__num">02</span><span class="pill">Карточка товара</span><svg class="flow__arrow" aria-hidden="true"><use href="#i-flow"/></svg></div>
+        <div class="shot__frame"><img src="../assets/img/spc-promo-card.jpg" alt="Карточка свечи SP CANDLE с блоком акции «Вместе дешевле»" loading="lazy"></div>
+        <p class="step__text small">В&nbsp;карточке условия акции и&nbsp;подсказка: сколько товаров этого формата уже в&nbsp;корзине и&nbsp;какая скидка применена.</p>
+      </li>
+      <li class="step">
+        <div class="step__head"><span class="step__num">03</span><span class="pill pill--fill">Скидка в&nbsp;корзине</span></div>
+        <div class="shot__frame"><img src="../assets/img/spc-promo-cart.jpg" alt="Корзина: три свечи 220 г, скидка 15% применена" loading="lazy"></div>
+        <p class="step__text small">В&nbsp;корзине скидка за&nbsp;комплект пересчитывается сама.</p>
+      </li>
+    </ol>
+
+    <div class="case__next">
+      <span class="idx">Следующий кейс</span>
+      <a class="big" href="sp-candle-carts.html">SP CANDLE&nbsp;— возврат брошенных корзин <svg class="arrow--sm arrow--md"><use href="#i-link"/></svg></a>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

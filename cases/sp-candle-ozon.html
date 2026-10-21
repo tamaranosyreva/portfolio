@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SP CANDLE: доставка Ozon в корзине Tilda — кейс Тамары Носыревой</title>
+<meta name="description" content="Кейс: собственная интеграция доставки в пункты выдачи Ozon в корзину интернет-магазина на Tilda — выбор пункта на карте, стоимость и срок доставки.">
+<link rel="preload" href="../assets/fonts/Gilroy-Light.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/Gilroy-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/css/style.css">
+<script src="../assets/js/main.js"></script>
+</head>
+<body data-case="1">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 72 72"><path d="M20 58.5H58.5V20" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="miter"/><path d="M12 12 54 54" fill="none" stroke="currentColor" stroke-width="9"/></symbol>
+  <symbol id="i-flow" viewBox="0 0 28 10"><path d="M0 5h26M22 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1"/></symbol>
+  <symbol id="i-link" viewBox="0 0 16 16"><path d="M3 13 13 3M5 3h8v8" fill="none" stroke="currentColor" stroke-width="1.2"/></symbol>
+</svg>
+
+<!-- ===================== Кейс 01 · описание ===================== -->
+<section class="screen case" id="case">
+  <header class="head">
+    <a class="head__name" href="../index.html">Тамара Носырева</a>
+    <nav class="head__nav" aria-label="Навигация">
+      <a href="../index.html#cases">← Все&nbsp;кейсы</a><a href="#proof">Подтверждения</a><a href="../index.html#contacts">Контакты</a>
+    </nav>
+  </header>
+
+  <div class="case__body">
+    <div class="grid">
+      <div class="case__titlebox">
+        <div class="pills"><span class="pill"><span class="nw">E-commerce</span></span><span class="pill">Tilda</span><span class="pill">JavaScript</span><span class="pill">Ozon</span></div>
+        <h1 class="h2">Доставка Ozon в&nbsp;корзине <span class="nw">интернет-магазина</span> на&nbsp;Tilda</h1>
+      </div>
+      <div class="case__meta small">
+        <div class="meta__row"><span class="idx">Клиент</span><span><span>SP CANDLE<br>ароматы для&nbsp;дома</span></span></div>
+        <div class="meta__row"><span class="idx">Роль</span><span><span>Идея, разработка, внедрение</span></span></div>
+        <div class="meta__row"><span class="idx">Сайт</span><span><a class="meta__link" href="https://spcandle.ru" target="_blank" rel="noopener">spcandle.ru <svg class="arrow--sm"><use href="#i-link"/></svg></a></span></div>
+      </div>
+    </div>
+
+    <div class="case__blocks">
+      <div class="cblock">
+        <span class="idx cblock__num">(01)</span>
+        <h3 class="h3">Контекст</h3>
+        <p class="small">SP&nbsp;CANDLE&nbsp;— петербургский производитель свечей, диффузоров и&nbsp;автопарфюма. <span class="nw">Интернет-магазин</span> на&nbsp;Tilda, в&nbsp;каталоге почти 190&nbsp;товаров. Доставки в&nbsp;пункты выдачи Ozon на&nbsp;сайте не&nbsp;было.</p>
+      </div>
+      <div class="cblock">
+        <span class="idx cblock__num">(02)</span>
+        <h3 class="h3">Задача</h3>
+        <p class="small">Расширить возможности магазина на&nbsp;Tilda и&nbsp;упростить оформление доставки: покупатель выбирает пункт выдачи Ozon, не&nbsp;уходя с&nbsp;сайта.</p>
+      </div>
+      <div class="cblock">
+        <span class="idx cblock__num">(03)</span>
+        <h3 class="h3">Моё решение</h3>
+        <p class="small">Собственная интеграция доставки Ozon в&nbsp;корзину&nbsp;— без&nbsp;стандартных модулей Ozon. Логика выбора и&nbsp;расчёта встроена в&nbsp;привычный путь покупки.</p>
+      </div>
+      <div class="cblock">
+        <span class="idx cblock__num">(04)</span>
+        <h3 class="h3">Техническая реализация</h3>
+        <ul class="list small">
+          <li>Собственный скрипт на&nbsp;JavaScript, встроенный в&nbsp;корзину Tilda</li>
+          <li>Выбор пункта выдачи на&nbsp;Яндекс Картах&nbsp;— без&nbsp;перехода на&nbsp;сторонние страницы</li>
+          <li>Стоимость и&nbsp;срок доставки видны сразу после выбора пункта</li>
+          <li>Подстраховка: если Яндекс Карты недоступны, включается резервный сценарий&nbsp;— доставка Ozon продолжает работать в&nbsp;упрощённом режиме</li>
+          <li>Поиск решения, код и&nbsp;тестирование&nbsp;— с&nbsp;помощью <span class="nw">AI-инструментов</span></li>
+        </ul>
+      </div>
+      <div class="cblock">
+        <span class="idx cblock__num">(05)</span>
+        <h3 class="h3">Стек</h3>
+        <div class="pills"><span class="pill">Tilda</span><span class="pill">JavaScript</span><span class="pill">Ozon</span><span class="pill">Яндекс Карты</span><span class="pill">Claude / ChatGPT</span></div>
+      </div>
+      <div class="cblock cblock--result">
+        <span class="idx cblock__num">(06)</span>
+        <h3 class="h3">Результат</h3>
+        <p class="small"><span class="mark">Новый способ доставки стал самым популярным в&nbsp;магазине.</span></p>
+      </div>
+    </div>
+  </div>
+  <a class="arrow case__more" href="#proof" aria-label="Дальше"><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+</section>
+
+<!-- ===================== Кейс 01 · подтверждения ===================== -->
+<section class="screen block proof" id="proof">
+
+  <div class="proof__body">
+    <div class="grid proof__top">
+      <h2 class="h2" style="grid-column:1/9">Путь покупателя</h2>
+    </div>
+
+    <ol class="steps">
+      <li class="step">
+        <div class="step__head"><span class="step__num">01</span><span class="pill">Товар</span><svg class="flow__arrow" aria-hidden="true"><use href="#i-flow"/></svg></div>
+        <div class="shot__frame"><img src="../assets/img/spc-product-card.jpg" alt="Карточка товара SP CANDLE" loading="lazy"></div>
+        <p class="step__text small">Покупатель выбирает формат аромата и&nbsp;нажимает «В&nbsp;корзину».</p>
+      </li>
+      <li class="step">
+        <div class="step__head"><span class="step__num">02</span><span class="pill">Корзина</span><svg class="flow__arrow" aria-hidden="true"><use href="#i-flow"/></svg></div>
+        <div class="shot__frame"><img src="../assets/img/spc-ozon-delivery.jpg" alt="Корзина SP CANDLE: выбор доставки Ozon" loading="lazy" style="object-position:left top"></div>
+        <p class="step__text small">В&nbsp;корзине выбирает «Пункт выдачи Ozon»&nbsp;— сразу видна предварительная стоимость.</p>
+      </li>
+      <li class="step">
+        <div class="step__head"><span class="step__num">03</span><span class="pill pill--fill">Пункт выдачи на&nbsp;карте</span></div>
+        <div class="shot__frame"><img src="../assets/img/spc-ozon-map.jpg" alt="Карта пунктов выдачи Ozon на Яндекс Картах" loading="lazy" style="object-position:center"></div>
+        <p class="step__text small">Выбирает пункт на&nbsp;карте и&nbsp;сразу видит стоимость и&nbsp;срок доставки&nbsp;— заказ оформлен.</p>
+      </li>
+    </ol>
+
+    <div class="case__next">
+      <span class="idx">Следующий кейс</span>
+      <a class="big" href="sp-candle-opt.html">SP CANDLE&nbsp;— автоматизация оптовых заказов <svg class="arrow--sm arrow--md"><use href="#i-link"/></svg></a>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

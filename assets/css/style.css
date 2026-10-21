@@ -1,0 +1,516 @@
+/* ==========================================================================
+   Тамара Носырева — портфолио
+   Единая дизайн-система для сайта и PDF.
+   Всё строится по клетке 24px: колонка = 4 клетки, межколонник = 1 клетка.
+   Текст «вписан в клетки»: высота строки всегда 24, 48, 72 или 96px,
+   первая строка блока начинается на линии клетки.
+   Десктоп — холст 1464 × 912 (61 × 38 клеток), масштабируется под экран;
+   он же — страница PDF. main.js доравнивает блоки до целых клеток.
+   ========================================================================== */
+
+@font-face { font-family: "Gilroy"; font-weight: 300; font-display: swap;
+  src: local("Gilroy-Light"), url("../fonts/Gilroy-Light.woff2") format("woff2"); }
+@font-face { font-family: "Gilroy"; font-weight: 400; font-display: swap;
+  src: local("Gilroy-Regular"), url("../fonts/Gilroy-Regular.woff2") format("woff2"); }
+@font-face { font-family: "NP Logo"; font-weight: 700; font-display: block;
+  src: url("../fonts/OpenSans-Bold-logo.woff2") format("woff2"); }
+@font-face { font-family: "Gilroy"; font-weight: 500; font-display: swap;
+  src: local("Gilroy-Medium"), url("../fonts/Gilroy-Medium.woff2") format("woff2"); }
+
+/* --- Токены ------------------------------------------------------------- */
+:root {
+  --c: 24px;                 /* клетка */
+  --paper: #FFFFFF;
+  --card: #FFFFFF;
+  --fill: #F3F3F1;           /* заливка-заглушка */
+  --ink: #141414;
+  --ink-2: #5F5D58;
+  --ink-3: #9A978F;
+  --line: rgba(20, 20, 20, .14);
+  --line-strong: rgba(20, 20, 20, .85);
+  --grid: rgba(46, 66, 160, .085);  /* тетрадная клетка */
+
+  /* акцент: синий по умолчанию; ?accent=yellow | lilac переключает */
+  --accent: #2B45E8;
+  --accent-ink: #FFFFFF;
+  --accent-soft: rgba(43, 69, 232, .12);
+
+  --pad: 24px;               /* поле экрана — 1 клетка */
+  --gap: 24px;               /* межколонник — 1 клетка */
+
+  --f: "Gilroy", "Onest", "Manrope", system-ui, -apple-system, sans-serif;
+}
+:root[data-accent="yellow"] { --accent: #F2C230; --accent-ink: #141414; --accent-soft: rgba(242, 194, 48, .3); }
+:root[data-accent="lilac"]  { --accent: #A996E0; --accent-ink: #141414; --accent-soft: rgba(169, 150, 224, .3); }
+
+/* --- База --------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; background: var(--paper); }
+body {
+  margin: 0;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: var(--c) var(--c);
+  background-position: var(--gx, var(--pad)) 0;  /* одна сетка на весь сайт, без стыков между экранами */
+  color: var(--ink);
+  font-family: var(--f);
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 24px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+p, figure { margin: 0; }
+h1, h2, h3, h4 { margin: 0; font-weight: 400; }
+ul { margin: 0; padding: 0; list-style: none; }
+::selection { background: var(--accent); color: var(--accent-ink); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.u-link { background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat; transition: background-size .25s; }
+.u-link:hover { background-size: 0 1px; background-position: 100% 100%; }
+
+/* --- Экран: холст в клетку --------------------------------------------- */
+.screen {
+  position: relative;
+  width: 1464px;
+  margin: 0 auto;
+  padding: 0 var(--pad) var(--c);   /* шапка: пустая клетка + клетка текста */
+  display: grid;
+  grid-template-rows: auto 1fr;
+  row-gap: 48px;
+  overflow: hidden;
+}
+body.is-canvas { zoom: var(--z, 1); }
+/* Блоки одностраничника: без меню. Между блоками везде ровно 5 клеток — от последней строки
+   или линии блока до верха заглавных следующего заголовка. Хвосты у блоков разные
+   (под колонками «Обо мне» есть клетка, карточки кончаются рамкой), поэтому верхний отступ
+   задан по блокам и проверен замером. */
+.block { padding-top: 48px; padding-bottom: 48px; grid-template-rows: auto; row-gap: 0; align-content: start; }
+#about, #scenarios, #contacts { padding-top: 72px; }
+#cases { padding-top: 72px; }
+/* Страницы кейсов: экраны по высоте содержимого, снизу 2 клетки */
+body[data-case] .screen { padding-bottom: 48px; }
+body[data-case] .proof { padding-top: 24px; }  /* до «Пути покупателя» ближе, чем между блоками главной */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap);
+}
+
+/* Колонтитул экрана: 2 клетки, линия — по линии клетки */
+.head {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap);
+  align-items: end;
+  height: 48px;
+  box-shadow: 0 1px 0 var(--line-strong);
+  font-size: 12px;
+  line-height: 24px;
+  font-weight: 400;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.head__name { grid-column: 1 / 4; }
+.head__nav  { grid-column: 7 / 13; display: flex; justify-content: flex-end; gap: 24px; }
+.head__nav a { position: relative; }
+.head__nav a::after { content: ""; position: absolute; inset: -10px -6px; } /* область нажатия */
+.head__nav a:hover, .head__nav a[aria-current] { color: var(--accent); }
+
+/* --- Типографика -------------------------------------------------------- */
+.idx { font-size: 12px; line-height: 24px; font-weight: 400; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+/* Крупный текст «вписан в клетки»: высота заглавных Gilroy = 0,7 кегля, поэтому
+   кегль = N клеток / 0,7. Блок обрезается сверху по заглавным, снизу по базовой линии —
+   отрицательными отступами из метрик шрифта (Gilroy Regular: верх строки 0,775 / низ 0,225 кегля;
+   Gilroy Light: 0,913 / 0,24). Так базовая линия ложится на линию клетки в любом браузере. */
+.h1 { --f: calc(72px / .7); --l: 96px; letter-spacing: -0.045em; }
+.h2 { --f: calc(48px / .7); --l: 72px; letter-spacing: -0.04em; }
+.h1, .h2, .result, .citem a.big { font-size: var(--f); line-height: var(--l);
+  margin-top: calc((var(--l) - var(--f)) / -2 - var(--f) * .075);
+  margin-bottom: calc((var(--l) - var(--f)) / -2 - var(--f) * .225); }
+.h3 { font-size: 22px; line-height: 24px; letter-spacing: -0.02em; }
+.h4 { font-size: 19px; line-height: 24px; letter-spacing: -0.01em; font-weight: 400; }
+.lead { --f: calc(24px / .7); --l: 48px; letter-spacing: -0.02em; font-size: var(--f); line-height: var(--l);
+  margin-top: calc((var(--l) - var(--f) * 1.153) / -2 - var(--f) * .213);
+  margin-bottom: calc((var(--l) - var(--f) * 1.153) / -2 - var(--f) * .24); }
+.small { font-size: 15px; line-height: 24px; }
+.muted { color: var(--ink-2); }
+.mark { background: var(--accent); color: var(--accent-ink); padding: 0 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+
+/* --- Пилюли (1px, скругление 30px, высота 20px — по центру клетки) ------ */
+.pills { display: flex; flex-wrap: wrap; column-gap: 6px; row-gap: 24px; }
+.pill {
+  position: relative;
+  display: block;
+  height: 25px; margin-bottom: -1px; /* верх и низ рамки — на линиях клетки */
+  /* кегль 10px, строка 10px: заглавные занимают 0,75…7,75px строки;
+     7,25 + 0,75 = 8px над текстом и 2,25 + 5,75 = 8px под ним */
+  padding: 7.25px 12px 5.75px;
+  border: 1px solid currentColor; border-radius: 30px;
+  font-size: 10px; font-weight: 400; line-height: 10px; letter-spacing: .06em; text-transform: uppercase;
+  white-space: nowrap;
+}
+.pill--fill { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
+
+/* --- Стрелки ------------------------------------------------------------ */
+.arrow { width: 72px; height: 72px; color: var(--accent); flex: none; display: block; }
+.arrow--end { justify-self: end; color: currentColor; }
+.card__media .arrow--end { justify-self: end; }
+.arrow--sm { width: 16px; height: 16px; display: inline-block; vertical-align: -2px; color: currentColor; }
+.arrow--md { width: 20px; height: 20px; }
+
+/* --- Списки ------------------------------------------------------------- */
+.list li { position: relative; padding-left: 24px; }
+.comp .list li + li { margin-top: 24px; }
+.list li::before { content: ""; position: absolute; top: 8px; left: 8px; width: 8px; height: 8px; border: 1px solid var(--accent); } /* синий квадратик-обводка по центру первой клетки строки */
+
+/* ==========================================================================
+   01 — первый экран
+   ========================================================================== */
+.hero__body { display: grid; grid-template-rows: auto 1fr auto; row-gap: 24px; }
+.hero__top { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); column-gap: var(--gap); align-items: start; }
+.hero__title { grid-column: 1 / 12; }
+.hero__arrow { grid-column: 12; justify-self: end; }
+.hero__bottom { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); column-gap: var(--gap); align-items: end; }
+.hero__photo { grid-column: 1 / 3; }
+.hero__photo img { width: 216px; height: 288px; margin-bottom: 0; object-fit: cover; filter: grayscale(1) contrast(1.04); }
+.hero__sub { grid-column: 4 / 10; display: grid; row-gap: 24px; }
+.hero__meta { grid-column: 10 / 13; text-align: right; display: grid; }
+.hero__meta a { justify-self: end; }
+
+/* ==========================================================================
+   02 — обо мне
+   ========================================================================== */
+.about__body { display: grid; row-gap: 48px; }
+.about__title { grid-column: 1 / 4; }
+.about__text { grid-column: 4 / 13; display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--gap); }
+.about__text p { padding-right: 48px; }
+.comps { align-items: stretch; }
+.comp > .idx { color: var(--accent); }
+.comp { grid-column: span 3; padding-bottom: 23px; border-top: 1px solid var(--line-strong); display: grid; align-content: start; row-gap: 24px; }
+.comp .h3 { min-height: 48px; }
+.comp .list { font-size: 17px; }
+
+/* ==========================================================================
+   03 — инструменты
+   ========================================================================== */
+.tools__body { display: grid; row-gap: 48px; }
+.tools__title { grid-column: 1 / 9; }
+.tools__note { grid-column: 9 / 13; align-self: end; }
+.tools__rows { display: grid; align-content: start; }
+.trow { padding: 23px 0 24px; border-top: 1px solid var(--line); align-items: start; }
+.trow:last-child { box-shadow: 0 1px 0 var(--line); }
+.trow__cat { grid-column: 1 / 4; display: flex; align-items: baseline; }
+.trow__cat .idx { width: 48px; flex: none; }
+.trow__tools { grid-column: 4 / 9; font-size: 19px; line-height: 24px; letter-spacing: -0.01em; font-weight: 400; }
+.trow__tools > span:not(.nw) { color: var(--accent); font-weight: 300; }
+.trow__cat .idx { color: var(--accent); }
+.trow__why { grid-column: 10 / 13; }
+.nw { font-style: normal; white-space: nowrap; }
+.tools__combo { align-items: start; padding-top: 23px; border-top: 1px solid var(--line-strong); }
+.tools__combo .idx { grid-column: 1 / 4; padding-top: 12px; }
+.tools__combo .flow { grid-column: 4 / 13; }
+
+/* Поток / связка: узлы по 2 клетки в высоту, стрелки по 2 клетки в ширину */
+.flow { display: flex; flex-wrap: wrap; align-items: flex-start; row-gap: 24px; }
+.flow--end { justify-content: flex-end; }
+.flow__node {
+  display: inline-flex; flex-direction: column; justify-content: center;
+  height: 49px; margin-bottom: -1px; padding: 0 16px; /* 2 клетки: нижняя граница ложится на линию */
+  border: 1px solid var(--ink); border-radius: 30px;
+  background: var(--card);
+  font-size: 15px; font-weight: 400; line-height: 18px; white-space: nowrap;
+}
+.flow__node small { font-size: 11px; line-height: 14px; color: var(--ink-2); font-weight: 300; }
+.flow__node--accent { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.flow__node--accent small { color: inherit; opacity: .8; }
+.flow__arrow { width: 48px; height: 48px; padding: 19px 10px; color: var(--ink); flex: none; display: block; }
+.flow > .flow__node + .flow__node { margin-left: 24px; }
+
+/* ==========================================================================
+   Карточки кейсов (экраны 4–6) — 3 карточки по 19 клеток, межколонник 1 клетка
+   ========================================================================== */
+.cases__body { display: grid; row-gap: 48px; }
+.cases__title { grid-column: 1 / 9; }
+.cases__note { grid-column: 9 / 13; align-self: end; }
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: auto; column-gap: var(--gap); row-gap: 0; align-items: stretch; }
+.cards > .card:nth-child(n+4) { margin-top: 24px; } /* второй ряд — через клетку */
+.cards--framed .card { border-color: var(--accent); }
+/* на экране тонкая линия при масштабе бледнеет — там рамка 2px (в PDF остаётся 1px) */
+@media screen {
+  /* рамка 2px целиком внутри клеток карточки: внешние края — на линиях */
+  .cards--framed .card { border-width: 2px; padding: 22px 22px 0; margin-right: 0; margin-bottom: 0; }
+  .cards--framed .card__foot { height: 70px; padding-bottom: 22px; }
+  .cards--framed .card__foot:empty { height: 22px; padding: 0; }
+}
+
+.card { position: relative; display: grid; grid-row: span 4; grid-template-rows: subgrid; /* шапки, тексты и ссылки карточек — на одной высоте */
+  min-width: 0; border: 1px solid var(--ink); border-radius: 0; padding: 23px 23px 0; margin: 0 -1px -1px 0; /* все четыре стороны рамки — на линиях клетки */ }
+.card__media { height: 192px; display: grid; grid-template-rows: auto 1fr; justify-items: center; }
+.card__num { justify-self: start; }
+/* Коробка логотипа — 4 клетки; оба логотипа по 74,5px высотой и по центру */
+.card__logo { align-self: start; display: flex; align-items: center; justify-content: center; height: 96px; }
+.card__logo img { width: 168px; height: auto; }
+.card__art { align-self: start; display: block; height: 96px; width: auto; color: var(--ink); overflow: visible; }
+/* «нарочито просто»: Open Sans Bold, строка = кеглю; от верха строчных первой строки
+   до базовой линии второй = 1,535 кегля = 74,5px — как у логотипа SP Candle */
+.logo-naro { display: block; font-family: "NP Logo", "Open Sans", sans-serif; font-weight: 700; font-size: 48.56px; line-height: 48.56px; letter-spacing: -0.01em; color: var(--ink);
+  margin: calc(48.56px * -.3529) 0 calc(48.56px * -.1121); }
+.card__head { padding-top: 24px; display: grid; row-gap: 24px; }
+.card__text { padding-top: 24px; display: grid; row-gap: 24px; align-content: start; }
+.card__row { display: grid; grid-template-columns: 96px 1fr; column-gap: 0; }
+.card__foot { padding: 24px 0; display: flex; justify-content: space-between; align-items: center; height: 72px; line-height: 24px; }
+.card__foot:empty { height: 24px; padding: 0; }
+.card__link { display: inline-flex; gap: 8px; align-items: center; font-size: 15px; font-weight: 400; }
+.card__link::after { content: ""; position: absolute; inset: 0; }
+.card:hover .card__link { color: var(--accent); }
+:root[data-accent] .card:hover .card__link { color: var(--ink); }
+
+/* Карточка без изображения: поле 24px внутри, содержимое по клеткам */
+.card__big { font-size: 64px; line-height: 72px; letter-spacing: -0.05em; font-weight: 400; }
+.card__ba { display: grid; grid-template-columns: repeat(2, 192px); column-gap: 24px; }
+.card__ba div { border-top: 1px solid var(--line-strong); padding-bottom: 23px; }
+
+.card--accent { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.card--accent .idx, .card--accent .muted { color: inherit; opacity: .85; }
+.card--accent:hover .card__link { color: inherit; }
+
+/* ==========================================================================
+   07 — контакты
+   ========================================================================== */
+.contact__body { display: grid; row-gap: 96px; }
+.contact__title { grid-column: 1 / 11; }
+.contact__arrow { grid-column: 12; justify-self: end; transform: rotate(180deg); }
+.contact__list { grid-column: 1 / 13; display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); column-gap: var(--gap); }
+.citem { grid-column: span 4; border-top: 1px solid var(--line-strong); padding-bottom: 23px; display: grid; grid-template-rows: 23px 24px 24px; align-content: start; }
+.citem > :last-child { grid-row: 3; align-self: center; }
+.citem a.big { --f: calc(24px / .7); --l: 24px; display: block; letter-spacing: -0.03em; font-weight: 400; word-break: break-word; }
+.citem a.big:hover { color: var(--accent); }
+:root[data-accent] .citem a.big:hover { color: var(--ink); background: var(--accent-soft); }
+.contact__foot { grid-column: 1 / 13; margin-top: 24px; height: 48px; display: flex; justify-content: space-between; align-items: flex-start; border-top: 1px solid var(--line); padding-top: 23px; }
+
+/* ==========================================================================
+   Страница кейса
+   ========================================================================== */
+.case__body { display: grid; grid-template-rows: auto 1fr; row-gap: 48px; }
+.case__titlebox { grid-column: 1 / 10; display: grid; row-gap: 24px; align-content: start; } /* пилюли — вровень с верхом рамки клиента */
+.accent { color: var(--accent); }
+/* Клиент / Роль / Сайт — в синей рамке, без линий (рамка целиком внутри клеток) */
+.case__meta { grid-column: 10 / 13; align-self: start; display: grid; row-gap: 24px; padding: 22px; border: 2px solid var(--accent); }
+.meta__row { display: grid; grid-template-columns: 72px 1fr; }
+.meta__link { display: inline-flex; align-items: center; gap: 6px; color: var(--accent); font-weight: 400; }
+.meta__link:hover { text-decoration: underline; text-underline-offset: 4px; }
+.case__blocks { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); column-gap: var(--gap); align-content: start; }
+/* Блоки кейса: два ряда по три. Линия → подпись → пустая клетка → текст */
+.case__blocks { row-gap: 48px; }
+.cblock { grid-column: span 4; padding: 0 0 23px; border-top: 1px solid var(--line-strong); display: grid; row-gap: 24px; align-content: start; }
+.cblock__num { color: var(--accent); }   /* как на главной: синий (01), под ним заголовок */
+/* стрелка «дальше» в правом нижнем углу первого экрана кейса */
+.case__more { position: absolute; right: var(--pad); bottom: 48px; width: 72px; height: 72px; }
+.cblock--result { padding-bottom: 119px; }   /* под результатом место для стрелки «дальше»: она не заходит на текст */
+.case__more:hover { transform: translateY(4px); transition: transform .2s; }
+.case { position: relative; }
+.result { --f: calc(24px / .7); --l: 48px; letter-spacing: -0.025em; font-weight: 400; }
+.result-list { display: grid; grid-template-columns: repeat(2, 504px); column-gap: var(--gap); }
+.result-list li { padding: 0 0 23px; border-top: 1px solid var(--line); font-size: 19px; line-height: 24px; font-weight: 400; }
+
+.proof__body { display: grid; grid-template-rows: auto 1fr auto; row-gap: 48px; }
+.proof__top { align-items: end; }
+.proof__top > .small { grid-column: 9 / 13; }
+.proof__grid { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: var(--gap); align-items: start; }
+.stack { display: grid; row-gap: 24px; }
+.shot { display: grid; row-gap: 0; min-width: 0; align-content: start; }
+.shot__frame { position: relative; overflow: hidden; background: var(--fill); height: 264px; }
+.shot__frame img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+.shot figcaption { font-size: 13px; line-height: 24px; color: var(--ink-2); }
+.shot figcaption b { color: var(--ink); font-weight: 400; }
+.shot--hero .shot__frame { height: 456px; }
+
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--gap); }
+.step { display: grid; row-gap: 24px; align-content: start; min-width: 0; }
+.step__head { display: flex; align-items: flex-start; gap: 12px; height: 24px; }
+.step__num { width: 36px; font-size: 22px; line-height: 24px; font-weight: 400; color: var(--accent); }
+.step__head .flow__arrow { width: 48px; height: 24px; padding: 7px 0; margin-left: auto; color: var(--accent); }
+.shot__frame--todo { display: grid; place-items: center; text-align: center; padding: 24px; color: var(--ink-2); font-size: 14px; line-height: 24px; }
+.shot__frame--todo b { display: block; color: var(--ink); font-weight: 400; }
+/* Схема на месте скриншота: фон прозрачный, всё по клеткам */
+.shot__frame--scheme { display: flex; align-items: center; justify-content: center; background: none; box-shadow: inset 0 0 0 2px var(--accent); }  /* рамка внутри клеток, размер как у скриншота; схема — точно по центру */
+/* Веер: стрелка → вертикальная линия → узлы; отводы и линия — по линиям клетки */
+.fan { display: flex; align-items: flex-start; }
+.fan > .flow__arrow { margin-top: 72px; color: var(--accent); }
+.fan__targets { position: relative; display: grid; row-gap: 24px; justify-items: start; padding-left: 24px; }
+.fan__targets::before { content: ""; position: absolute; left: 0; top: 24px; bottom: 24px; width: 1px; background: var(--ink); }
+.fan__targets .flow__node { position: relative; }
+.fan__targets .flow__node::before { content: ""; position: absolute; left: -25px; top: 23px; width: 24px; height: 1px; background: var(--ink); }
+/* Схема писем: три пиктограммы 3×2 клетки, стрелки по центру пиктограмм */
+.mailflow { display: grid; grid-template-columns: repeat(5, 72px); align-items: start; }
+.mailflow__item { display: grid; grid-template-columns: 72px; row-gap: 24px; justify-items: unsafe center; text-align: center; }  /* метка и подпись — по центру своей пиктограммы, длинные свисают поровну */
+.mailflow__item > b { width: max-content; }
+.mailflow__item > span { width: 120px; }
+.mailflow__item b { font-size: 22px; line-height: 24px; font-weight: 400; letter-spacing: -0.02em; }
+.mailflow__item svg { width: 72px; height: 48px; overflow: visible; color: var(--ink); }
+.mailflow > .flow__arrow { margin: 48px 0 0 12px; color: var(--accent); }
+.case__next { display: flex; justify-content: space-between; align-items: flex-start; height: 72px; padding-top: 23px; border-top: 1px solid var(--line-strong); }
+.case__next a.big { font-size: 24px; line-height: 24px; letter-spacing: -0.025em; font-weight: 400; display: inline-flex; gap: 10px; align-items: center; }
+.case__next a.big:hover { color: var(--accent); }
+
+/* ==========================================================================
+   Планшет и телефон: одна колонка, ширина контента кратна клетке
+   ========================================================================== */
+@media screen and (max-width: 1199px) {
+  :root { --pad: 16px; }
+  body { font-size: 17px; }
+  .screen { width: auto; height: auto; min-height: 0; overflow: visible; padding: 0 var(--pad) 48px; row-gap: 48px; }
+  .head { grid-template-columns: 1fr; height: auto; padding-top: 24px; row-gap: 24px; }  /* пустая клетка, имя, клетка, меню, линия */
+  .head__name { grid-column: 1; color: var(--accent); }
+  .head__nav { grid-column: 1 / -1; justify-content: flex-start; gap: 18px; overflow-x: auto; }
+  .grid, .hero__top, .hero__bottom, .contact__list, .case__blocks, .proof__grid { grid-template-columns: minmax(0, 1fr); row-gap: 24px; }
+  .grid > *, .hero__top > *, .hero__bottom > *, .contact__list > *, .case__blocks > *, .proof__grid > * { grid-column: 1 / -1 !important; }
+  /* заголовки крупнее при той же строке 48: базовая линия каждой строки — на линии клетки,
+     заглавные первой строки чуть выше клетки; длинное слово не влезает — main.js уменьшает кегль */
+  .h1, .h2, .contact__title { --f: 44px; --l: 48px; }
+  .hero__title { --f: 48px; }
+  .h1, .h2 { margin-top: calc((var(--l) - var(--f)) / -2 - var(--f) * .775 + 24px); }
+  .lead { --f: 19px; --l: 24px; margin: 0; }  /* мелкий кегль — обычные строки в клетках, без обрезки по заглавным */
+  .lead br { display: none; }
+  .result { --f: 22px; --l: 24px; }
+  .hero__arrow, .contact__arrow { display: none; }
+  .hero__meta { text-align: left; }
+  .about__text { grid-template-columns: 1fr; row-gap: 24px; }
+  .about__text p { padding-right: 0; }
+  /* блоки «Обо мне» — как блоки кейса: номер в строке с заголовком, между блоками 2 клетки */
+  .comp { margin-bottom: 0; grid-template-columns: 48px minmax(0, 1fr); }
+  .comp > * { grid-column: 1 / -1; }
+  .comp > .idx { grid-column: 1; grid-row: 1; padding-top: 23px; }
+  .comp > .h3 { grid-column: 2; grid-row: 1; padding-top: 23px; }
+  .comp .list li + li { margin-top: 0; }
+  .comp .h3 { min-height: 0; }
+  .trow__cat, .trow__why { padding-top: 0; }
+  .trow__cat { align-items: flex-start; }  /* номер и название — каждый в своей строке 24: ряд ровно в клетку */
+  .cards { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; row-gap: 24px; }
+  .card { grid-row: auto; grid-template-rows: auto auto auto auto; }
+  .cards > .card:nth-child(n+4) { margin-top: 0; }
+  .card__ba { grid-template-columns: 1fr 1fr; }
+  .citem { margin-bottom: 0; }
+  .citem a.big { --f: 26px; --l: 24px; }
+  .contact__foot { margin-top: 0; }
+  .contact__body { row-gap: 48px; }
+  .case__meta { margin-top: 24px; }
+  .case__titlebox, .case__titlebox > * { min-width: 0; }  /* длинное слово не растягивает колонку — заголовок ужимается по ширине */
+  .steps { grid-template-columns: 1fr; row-gap: 48px; }
+  .case__more { display: none; }
+  .cblock--result { padding-bottom: 23px; }
+  /* кейс в PDF: номер раздела в одной строке с заголовком — страница помещается целиком */
+  .cblock { grid-template-columns: 48px minmax(0, 1fr); }
+  .cblock > * { grid-column: 1 / -1; }
+  .cblock > .cblock__num { grid-column: 1; grid-row: 1; padding-top: 23px; }
+  .cblock > h3 { grid-column: 2; grid-row: 1; padding-top: 23px; }
+  .result-list { grid-template-columns: 1fr; }
+  .shot--hero .shot__frame, .shot__frame { height: 216px; }
+  .case__next { flex-direction: column; height: auto; padding: 23px 0 24px; }
+  .case__next a.big { font-size: 20px; }
+  .flow--end { justify-content: flex-start; }
+  .shot__frame--scheme { height: auto; padding: 24px; }
+  .mailflow { grid-template-columns: minmax(0, 1fr); row-gap: 24px; }  /* столбиком: пиктограмма слева, подпись справа */
+  .mailflow__item { grid-template-columns: 72px minmax(0, 1fr); column-gap: 24px; row-gap: 0; justify-items: start; text-align: left; }
+  .mailflow__item svg { grid-column: 1; grid-row: 1 / span 2; }
+  .mailflow__item b { grid-column: 2; grid-row: 1; }
+  .mailflow__item span { grid-column: 2; grid-row: 2; width: auto; }
+  .mailflow > .flow__arrow { display: none; }
+
+  /* между блоками главной — 3 клетки: от последней строки блока до заглавных следующего заголовка */
+  .hero, .block { padding-bottom: 0; }
+  .block.contact { padding-bottom: 48px; }
+  .block, #about, #scenarios, #contacts, #cases { padding-top: 72px; }
+  #tools { padding-top: 48px; }  /* «Обо мне» кончается пустой клеткой под последним пунктом */
+  /* первый экран: от заголовка до фото и от фото до текста — по 2 клетки */
+  .hero__body { grid-template-rows: auto; row-gap: 48px; }
+  .hero__body > div:empty { display: none; }
+  .hero__bottom { row-gap: 48px; }
+  /* направления — в одну строку */
+  .hero__sub .pills, .citem .pills { flex-wrap: nowrap; column-gap: 4px; }
+  .hero__sub .pill, .citem .pill { padding-left: 8px; padding-right: 8px; letter-spacing: .03em; }
+  /* карточки: логотип ровно посередине между номером и пилюлями */
+  .card__media { height: auto; }
+  .card__logo, .card__art { margin: 48px 0 24px; }
+  .logo-naro { font-size: 36px; line-height: 36px; margin: calc(36px * -.3529) 0 calc(36px * -.1121); position: relative; top: -2.5px; }  /* видимые буквы — поровну от номера и от пилюль */
+  .card .h3 { font-size: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+}
+
+/* ==========================================================================
+   Печать / PDF: каждый экран — страница 1464 × 912
+   ========================================================================== */
+@page { size: 1464px 912px; margin: 0; }
+@media print {
+  body.is-canvas { zoom: 1; }
+  .screen { height: 912px; break-after: page; page-break-after: always; }
+  .screen:last-child { break-after: auto; page-break-after: auto; }
+  .card:hover .card__media img { transform: none; }
+
+  /* ---- PDF: своя раскладка, чтобы каждая страница была заполнена ---- */
+  .block, #about, #scenarios, #contacts { padding-top: 48px; padding-bottom: 48px; grid-template-rows: 1fr; }
+  .block > * { min-height: 0; }
+  .contact__foot { display: none; }   /* подвал сайта в презентации не нужен */
+  .case__more { display: none; }
+  .cblock--result { padding-bottom: 23px; }
+  /* кейс в PDF: номер раздела в одной строке с заголовком — страница помещается целиком */
+  .cblock { grid-template-columns: 48px minmax(0, 1fr); }
+  .cblock > * { grid-column: 1 / -1; }
+  .cblock > .cblock__num { grid-column: 1; grid-row: 1; padding-top: 23px; }
+  .cblock > h3 { grid-column: 2; grid-row: 1; padding-top: 23px; }
+  /* первый экран кейса целиком на странице и с полем снизу: промежутки — по клетке */
+  .case, .case__body, .case__blocks { row-gap: 24px; }
+  .shot__frame--scheme { box-shadow: inset 0 0 0 1px var(--accent); }
+
+  /* Обо мне: вводный текст крупно, компетенции внизу страницы */
+  .about__body { grid-template-rows: auto 1fr; row-gap: 96px; }
+  .about__text p { --f: calc(24px / .7); --l: 48px; font-size: var(--f); line-height: var(--l); letter-spacing: -0.02em; color: var(--ink);
+    margin-top: calc((var(--l) - var(--f) * 1.153) / -2 - var(--f) * .213);
+    margin-bottom: calc((var(--l) - var(--f) * 1.153) / -2 - var(--f) * .24); }
+  .comps { align-self: end; }
+  .comp .list { font-size: 19px; }
+
+  /* Инструменты: пять строк делят страницу поровну (по 6 клеток) */
+  .tools__body { grid-template-rows: auto 1fr; }
+  .tools__rows { grid-auto-rows: 1fr; }
+  .trow__tools { font-size: 22px; }
+
+  /* Карточки — строками на всю ширину: лого/иллюстрация слева, текст справа */
+  .cases__body { grid-template-rows: auto 1fr; }
+  .cards { grid-template-columns: minmax(0, 1fr); grid-auto-rows: 216px; row-gap: 24px; align-content: start; }
+  #cases-2 .cards { grid-auto-rows: 240px; }
+  .cards > .card:nth-child(n+4) { margin-top: 0; }
+  .card { grid-row: auto; grid-template-rows: auto 1fr; grid-template-columns: 288px minmax(0, 1fr) auto; column-gap: 48px;
+    grid-template-areas: "media head foot" "media text text"; padding: 23px 23px 0; }
+  .card__media { grid-area: media; height: auto; }
+  .card__head { grid-area: head; padding-top: 0; }
+  .card__foot { grid-area: foot; padding: 0; height: 24px; align-self: start; }
+  .card__foot:empty { display: none; }
+  .card__text { grid-area: text; grid-template-columns: 1fr 1fr; column-gap: 48px; }
+  .card__text > p { grid-column: 1 / -1; max-width: 720px; }
+  .card .h3 { font-size: 26px; }
+  .card__text { font-size: 17px; }
+  .card__row { grid-template-columns: 120px 1fr; }
+
+  /* Контакты: заголовок и крупный список строками на всю ширину */
+  .contact__body { grid-template-rows: auto 1fr; row-gap: 96px; }
+  .contact__list { grid-auto-rows: 144px; align-content: start; }
+  .citem { grid-column: 1 / -1; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-template-rows: none; column-gap: var(--gap);
+    align-items: start; padding-top: 0; }
+  .citem > .idx { grid-column: 1 / 4; grid-row: 1; padding-top: 23px; }
+  .citem > :last-child { grid-column: 4 / 13; grid-row: 1; align-self: start; margin-top: 48px; }
+  .citem a.big { --f: calc(48px / .7); --l: 72px; margin-top: calc(48px + (72px - 48px / .7) / -2 - 48px / .7 * .075); }
+  .citem .pills { margin-top: 48px; }
+}

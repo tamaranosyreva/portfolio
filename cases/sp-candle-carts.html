@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SP CANDLE: возврат брошенных корзин — кейс Тамары Носыревой</title>
+<meta name="description" content="Кейс: автоматический возврат брошенных корзин для интернет-магазина — напоминание через час, промокод через 24 часа, оплаченным заказам письма не приходят.">
+<link rel="preload" href="../assets/fonts/Gilroy-Light.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/Gilroy-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/css/style.css">
+<script src="../assets/js/main.js"></script>
+</head>
+<body data-case="1">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 72 72"><path d="M20 58.5H58.5V20" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="miter"/><path d="M12 12 54 54" fill="none" stroke="currentColor" stroke-width="9"/></symbol>
+  <symbol id="i-flow" viewBox="0 0 28 10"><path d="M0 5h26M22 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1"/></symbol>
+  <symbol id="i-link" viewBox="0 0 16 16"><path d="M3 13 13 3M5 3h8v8" fill="none" stroke="currentColor" stroke-width="1.2"/></symbol>
+</svg>
+
+<!-- ===================== Кейс 07 · описание ===================== -->
+<section class="screen case" id="case">
+  <header class="head">
+    <a class="head__name" href="../index.html">Тамара Носырева</a>
+    <nav class="head__nav" aria-label="Навигация">
+      <a href="../index.html#cases">← Все&nbsp;кейсы</a><a href="#proof">Подтверждения</a><a href="../index.html#contacts">Контакты</a>
+    </nav>
+  </header>
+
+  <div class="case__body">
+    <div class="grid">
+      <div class="case__titlebox">
+        <div class="pills"><span class="pill">Автоматизация</span><span class="pill"><span class="nw">E-mail</span></span><span class="pill">Make</span></div>
+        <h1 class="h2">Брошенные корзины, которые возвращаются сами</h1>
+      </div>
+      <div class="case__meta small">
+        <div class="meta__row"><span class="idx">Клиент</span><span><span>SP CANDLE<br>ароматы для&nbsp;дома</span></span></div>
+        <div class="meta__row"><span class="idx">Роль</span><span><span>Сценарий и&nbsp;автоматизация</span></span></div>
+        <div class="meta__row"><span class="idx">Сайт</span><span><a class="meta__link" href="https://spcandle.ru" target="_blank" rel="noopener">spcandle.ru <svg class="arrow--sm"><use href="#i-link"/></svg></a></span></div>
+      </div>
+    </div>
+
+    <div class="case__blocks">
+      <div class="cblock">
+        <span class="idx cblock__num">(01)</span>
+        <h3 class="h3">Контекст</h3>
+        <p class="small">В&nbsp;<span class="nw">интернет-магазине</span> SP CANDLE часть заказов оформляли, но&nbsp;не&nbsp;оплачивали. Чтобы вернуть покупателя, нужно было следить за&nbsp;статусом каждого заказа и&nbsp;писать вручную.</p>
+      </div>
+      <div class="cblock">
+        <span class="idx cblock__num">(02)</span>
+        <h3 class="h3">Задача</h3>
+        <p class="small">Возвращать покупателей к&nbsp;неоплаченным заказам автоматически, без&nbsp;участия менеджера, и&nbsp;не&nbsp;беспокоить тех, кто уже оплатил.</p>
+      </div>
+      <div class="cblock">
+        <span class="idx cblock__num">(03)</span>
+        <h3 class="h3">Моё решение</h3>
+        <ul class="list small">
+          <li>Система отслеживает статус каждого заказа</li>
+          <li>Через час без&nbsp;оплаты&nbsp;— <span class="nw">письмо-напоминание</span></li>
+          <li>Через 24&nbsp;часа&nbsp;— промокод 10%</li>
+          <li>Оплаченный заказ отмечается в&nbsp;таблице, и&nbsp;письма больше не&nbsp;приходят</li>
+        </ul>
+      </div>
+      <div class="cblock">
+        <span class="idx cblock__num">(04)</span>
+        <h3 class="h3">Техническая реализация</h3>
+        <ul class="list small">
+          <li>Автоматический сценарий получает статусы заказов с&nbsp;сайта</li>
+          <li>Статусы хранятся в&nbsp;Google Sheets: по&nbsp;ним сценарий решает, отправлять ли&nbsp;письмо</li>
+          <li>Письма уходят по&nbsp;таймеру: через 1&nbsp;и&nbsp;24&nbsp;часа после заказа</li>
+        </ul>
+      </div>
+      <div class="cblock">
+        <span class="idx cblock__num">(05)</span>
+        <h3 class="h3">Стек</h3>
+        <div class="pills"><span class="pill">Tilda</span><span class="pill">Make</span><span class="pill">Google Sheets</span><span class="pill"><span class="nw">E-mail</span></span></div>
+      </div>
+      <div class="cblock cblock--result">
+        <span class="idx cblock__num">(06)</span>
+        <h3 class="h3">Результат</h3>
+        <p class="small"><span class="mark">Напоминания и&nbsp;промокод отправляются сами</span>&nbsp;— по&nbsp;статусу заказа. Менеджеру не&nbsp;нужно отслеживать неоплаченные заказы вручную.</p>
+      </div>
+    </div>
+  </div>
+  <a class="arrow case__more" href="#proof" aria-label="Дальше"><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+</section>
+
+<!-- ===================== Кейс 07 · подтверждения ===================== -->
+<section class="screen block proof" id="proof">
+
+  <div class="proof__body">
+    <div class="grid proof__top">
+      <h2 class="h2" style="grid-column:1/9">Путь заказа</h2>
+    </div>
+
+    <ol class="steps">
+      <li class="step">
+        <div class="step__head"><span class="step__num">01</span><span class="pill">Корзина</span><svg class="flow__arrow" aria-hidden="true"><use href="#i-flow"/></svg></div>
+        <div class="shot__frame"><img src="../assets/img/spc-cart-card.jpg" alt="Корзина интернет-магазина SP CANDLE" loading="lazy" style="object-position:right top"></div>
+        <p class="step__text small">Покупатель оформил заказ, но&nbsp;не&nbsp;оплатил его. Система следит за&nbsp;статусом.</p>
+      </li>
+      <li class="step">
+        <div class="step__head"><span class="step__num">02</span><span class="pill">Письма</span><svg class="flow__arrow" aria-hidden="true"><use href="#i-flow"/></svg></div>
+        <div class="shot__frame shot__frame--scheme">
+          <div class="mailflow">
+            <div class="mailflow__item"><b>1&nbsp;ч</b><svg viewBox="0 0 72 48" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1"><rect x=".5" y=".5" width="71" height="47"/><path d="M.5 .5 36 28 71.5 .5"/></svg><span class="small">Напоминание</span></div>
+            <svg class="flow__arrow" aria-hidden="true"><use href="#i-flow"/></svg>
+            <div class="mailflow__item"><b>24&nbsp;ч</b><svg viewBox="0 0 72 48" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1"><rect x=".5" y=".5" width="71" height="47"/><path d="M.5 .5 36 28 71.5 .5"/><circle cx="72" cy="0" r="12" fill="var(--accent)" stroke="none"/><text x="72" y="4.5" text-anchor="middle" font-size="13" font-weight="400" fill="#fff" stroke="none" font-family="Gilroy, sans-serif">%</text></svg><span class="small nw">Промокод 10%</span></div>
+            <svg class="flow__arrow" aria-hidden="true"><use href="#i-flow"/></svg>
+            <div class="mailflow__item"><b>Оплата</b><svg viewBox="0 0 72 48" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1"><rect x=".5" y=".5" width="71" height="47"/><path d="M.5 24.5H71.5M24.5 .5V47.5"/><circle cx="72" cy="0" r="12" fill="var(--accent)" stroke="none"/><path d="M66.5 .5 70.5 4.5 77.5 -3.5" stroke="#fff" stroke-width="1.5"/></svg><span class="small">Письма прекращаются</span></div>
+          </div>
+        </div>
+        <p class="step__text small">Сценарий сам решает, какое письмо отправить и&nbsp;когда остановиться.</p>
+      </li>
+      <li class="step">
+        <div class="step__head"><span class="step__num">03</span><span class="pill pill--fill">Возврат к&nbsp;оплате</span></div>
+        <div class="shot__frame"><img src="../assets/img/spc-cart-promo.jpg" alt="Письмо SP CANDLE с личным промокодом на 10%" loading="lazy"></div>
+        <p class="step__text small">Личный промокод на&nbsp;10% и&nbsp;кнопка «Завершить заказ со&nbsp;скидкой» возвращают покупателя к&nbsp;корзине.</p>
+      </li>
+    </ol>
+
+    <div class="case__next">
+      <span class="idx">Все&nbsp;кейсы</span>
+      <a class="big" href="../index.html#cases">Вернуться к&nbsp;портфолио <svg class="arrow--sm arrow--md"><use href="#i-link"/></svg></a>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
