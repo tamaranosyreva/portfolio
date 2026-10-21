@@ -194,8 +194,8 @@
     }, { passive: true });
   }
 
-  // Заголовки по словам: каждое слово — в .aw со своей задержкой. Неразрывные пробелы
-  // остаются внутри слова, поэтому переносы строк те же, что без анимации.
+  // Заголовки по словам: каждое слово — в строчном .aw со своей задержкой.
+  // .aw не inline-block, поэтому переносы строк те же, что без анимации.
   function splitWords(h) {
     var walker = document.createTreeWalker(h, NodeFilter.SHOW_TEXT), nodes = [], n, i = 0;
     while ((n = walker.nextNode())) nodes.push(n);

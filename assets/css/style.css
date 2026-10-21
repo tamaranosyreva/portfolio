@@ -487,9 +487,11 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
 /* Заголовки по словам: main.js оборачивает слова в .aw и показывает их по очереди,
    когда заголовок появляется на экране. До запуска заголовки скрыты — без мигания. */
 .js-anim:not(.anim-go) :is(.h1, .h2) { opacity: 0; }
-.js-anim .aw { display: inline-block; opacity: 0; transform: translateY(.3em); }
-.js-anim .in .aw { opacity: 1; transform: none;
-  transition: opacity .6s ease, transform .6s cubic-bezier(.2, .7, .2, 1); transition-delay: var(--d, 0s); }
+/* Слово остаётся обычным строчным элементом (не inline-block) и сдвигается через top:
+   так переносы строк точно такие же, как без анимации, — неразрывные пробелы работают. */
+.js-anim .aw { position: relative; top: .3em; opacity: 0; }
+.js-anim .in .aw { top: 0; opacity: 1;
+  transition: opacity .6s ease, top .6s cubic-bezier(.2, .7, .2, 1); transition-delay: var(--d, 0s); }
 
 /* Живые стрелки: большие рисуются линией при появлении, маленькие у ссылок сдвигаются по направлению */
 .js-anim .arrow { stroke-dasharray: 100; stroke-dashoffset: 100; }
@@ -524,7 +526,7 @@ a:hover > .arrow--back { transform: translateX(-4px); }
 @media print {
   body.is-canvas { zoom: 1; }
   .head-bar, .grid-glow { display: none; }
-  .js-anim :is(.h1, .h2), .js-anim .aw { opacity: 1 !important; transform: none !important; }   /* в PDF — без анимации */
+  .js-anim :is(.h1, .h2), .js-anim .aw { opacity: 1 !important; top: 0 !important; }   /* в PDF — без анимации */
   .js-anim .arrow { stroke-dashoffset: 0 !important; }
   .screen { height: 912px; break-after: page; page-break-after: always; }
   .screen:last-child { break-after: auto; page-break-after: auto; }
