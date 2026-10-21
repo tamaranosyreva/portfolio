@@ -154,8 +154,8 @@
   }
 
   // Закреплённое меню: копия шапки первого экрана. При прокрутке вниз прячется, при прокрутке
-  // вверх выезжает сверху. Сама шапка остаётся в сетке; вверху страницы копия стоит ровно
-  // поверх неё, поэтому прячется без анимации — подмену не видно.
+  // вверх выезжает сверху синей полосой. Сама шапка остаётся в сетке; как только она снова
+  // показалась вверху страницы, полоса уезжает.
   function stickyHead() {
     var head = document.querySelector('.head');
     if (!head) return;
@@ -173,14 +173,11 @@
     function update() {
       ticking = false;
       var y = window.scrollY;
-      bar.style.setProperty('--bar-y', -((y / zoom()) % C) + 'px');
-      if (head.getBoundingClientRect().top >= 0) {         // шапка на месте — копия не нужна
-        bar.classList.add('is-instant');
+      if (head.getBoundingClientRect().bottom > 0) {       // шапка видна — полоса не нужна
         bar.classList.remove('is-shown');
         lastY = y;
         return;
       }
-      bar.classList.remove('is-instant');
       if (y < lastY - 4) bar.classList.add('is-shown');      // вверх
       else if (y > lastY + 4) bar.classList.remove('is-shown'); // вниз
       else return;

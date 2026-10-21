@@ -118,29 +118,26 @@ body[data-case] .proof { padding-top: 24px; }  /* до «Пути покупат
   letter-spacing: .06em;
   text-transform: uppercase;
 }
-.head__name { grid-column: 1 / 4; }
+.head__name { grid-column: 1 / 4; color: var(--accent); }
 .head__nav  { grid-column: 7 / 13; display: flex; justify-content: flex-end; gap: 24px; }
 .head__nav a { position: relative; }
 .head__nav a::after { content: ""; position: absolute; inset: -10px -6px; } /* область нажатия */
 .head__nav a:hover, .head__nav a[aria-current] { color: var(--accent); }
 
 /* Закреплённое меню — копия шапки первого экрана (main.js): при прокрутке вниз прячется,
-   при прокрутке вверх выезжает. Клетка на фоне продолжает клетку страницы: сдвиг --bar-y
-   main.js пересчитывает при прокрутке. Вверху страницы копия стоит ровно поверх шапки. */
+   при прокрутке вверх выезжает синей полосой с белым текстом, без линии. Вверху страницы
+   уезжает — остаётся обычная шапка на клетке. Полоса во всю ширину окна, ссылки — по сетке. */
 .head-bar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 10;
-  width: 1464px; margin: 0 auto; padding: 0 var(--pad);
-  background-color: var(--paper);
-  background-image:
-    linear-gradient(var(--grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size: var(--c) var(--c);
-  background-position: var(--pad) var(--bar-y, 0);
+  padding: 0 var(--pad);
+  background: var(--accent); color: var(--accent-ink);
   transform: translateY(-100%); transition: transform .25s ease;
   visibility: hidden;
 }
+.head-bar .head { max-width: 1416px; margin: 0 auto; box-shadow: none; align-items: center; }   /* без линии текст — посередине полосы */
+.head-bar .head__name { color: inherit; }
+.head-bar .head__nav a:hover { color: inherit; opacity: .7; }
 .head-bar.is-shown { transform: none; visibility: visible; }
-.head-bar.is-instant { transition: none; }
 
 /* --- Типографика -------------------------------------------------------- */
 .idx { font-size: 12px; line-height: 24px; font-weight: 400; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
@@ -389,9 +386,8 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
   body { font-size: 17px; }
   .screen { width: auto; height: auto; min-height: 0; overflow: visible; padding: 0 var(--pad) 48px; row-gap: 48px; }
   .head { grid-template-columns: 1fr; height: auto; padding-top: 24px; row-gap: 24px; }  /* пустая клетка, имя, клетка, меню, линия */
-  .head__name { grid-column: 1; color: var(--accent); }
+  .head__name { grid-column: 1; }
   .head__nav { grid-column: 1 / -1; justify-content: flex-start; gap: 18px; overflow-x: auto; }
-  .head-bar { width: auto; }
   .head-bar .head { height: 48px; padding-top: 0; }   /* на телефоне в закреплённом меню только ссылки */
   .head-bar .head__name { display: none; }
   .grid, .hero__top, .hero__bottom, .contact__list, .case__blocks, .proof__grid { grid-template-columns: minmax(0, 1fr); row-gap: 24px; }
@@ -465,6 +461,20 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
   .card__logo, .card__art { margin: 48px 0 24px; }
   .logo-naro { font-size: 36px; line-height: 36px; margin: calc(36px * -.3529) 0 calc(36px * -.1121); position: relative; top: -2.5px; }  /* видимые буквы — поровну от номера и от пилюль */
   .card .h3 { font-size: 20px; }
+}
+
+/* Планшет: шапка в одну строку, как на компьютере; на первом экране фото, текст
+   и «Связаться» — в один ряд по нижнему краю. Ширины кратны клетке: фото 9 клеток,
+   текст начинается через клетку после фото, «Связаться» прижата к правому краю. */
+@media screen and (min-width: 768px) and (max-width: 1199px) {
+  .head { grid-template-columns: auto minmax(0, 1fr); column-gap: 24px; height: 48px; padding-top: 0; }
+  .head__name { grid-column: 1; }
+  .head__nav { grid-column: 2; justify-content: flex-end; overflow-x: visible; }   /* меню целиком помещается — без прокрутки */
+  .head-bar .head__name { display: block; }   /* закреплённое меню — такое же, как шапка */
+  .hero__bottom { grid-template-columns: auto minmax(0, 1fr) auto; column-gap: 24px; }
+  .hero__bottom > .hero__photo { grid-column: 1 !important; }
+  .hero__bottom > .hero__sub { grid-column: 2 !important; }
+  .hero__bottom > .hero__meta { grid-column: 3 !important; text-align: right; }
 }
 
 @media (prefers-reduced-motion: reduce) {
