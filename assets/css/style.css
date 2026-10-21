@@ -280,7 +280,11 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
    до базовой линии второй = 1,535 кегля = 74,5px — как у логотипа SP Candle */
 .logo-naro { display: block; font-family: "NP Logo", "Open Sans", sans-serif; font-weight: 700; font-size: 48.56px; line-height: 48.56px; letter-spacing: -0.01em; color: var(--ink);
   margin: calc(48.56px * -.3529) 0 calc(48.56px * -.1121); }
-.card__head { padding-top: 24px; display: grid; row-gap: 24px; }
+.card__head { padding-top: 24px; display: grid; row-gap: 24px; align-content: start; }   /* лишняя высота ряда — под заголовком, а не между пилюлями и заголовком */
+@media screen and (min-width: 1200px) {
+  /* карточка без пилюль (синяя «Стандартный модуль не подходит?»): заголовок на уровне соседних */
+  .card__head > .h3:first-child { margin-top: 48px; }
+}
 .card__text { padding-top: 24px; display: grid; row-gap: 24px; align-content: start; }
 .card__row { display: grid; grid-template-columns: 96px 1fr; column-gap: 0; }
 .card__foot { padding: 24px 0; display: flex; justify-content: space-between; align-items: center; height: 72px; line-height: 24px; }
