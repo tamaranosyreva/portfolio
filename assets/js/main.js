@@ -261,6 +261,40 @@
     document.documentElement.addEventListener('mouseleave', function () { glow.classList.remove('is-on'); });
   }
 
+  // Раскрывающиеся блоки: список цен (первые три услуги и кнопка «Смотреть все услуги»)
+  // и вопросы-ответы (details, открыт только один ответ).
+  // Высота экрана после раскрытия меняется — заново выравниваем по клетке.
+  var relayoutTimer;
+  function relayout() { clearTimeout(relayoutTimer); relayoutTimer = setTimeout(snap, 20); }
+  function toggles() {
+    document.querySelectorAll('.prices__more').forEach(function (btn) {
+      var sec = btn.closest('.screen');
+      var label = btn.querySelector('.u-link');
+      var all = sec.querySelectorAll('.price').length;
+      function set(open, quiet) {
+        sec.classList.toggle('is-open', open);
+        btn.setAttribute('aria-expanded', String(open));
+        label.textContent = open ? 'Свернуть' : 'Смотреть все услуги (' + all + ')';
+        if (!quiet) relayout();
+      }
+      sec.classList.add('is-collapsible');
+      set(false, true);
+      btn.addEventListener('click', function () {
+        var open = !sec.classList.contains('is-open');
+        set(open);
+        // свернули — возвращаемся к началу списка, чтобы не оказаться ниже блока
+        if (!open) setTimeout(function () { sec.scrollIntoView({ block: 'start' }); }, 40);
+      });
+    });
+    document.addEventListener('toggle', function (e) {   // details не всплывает — ловим на перехвате
+      var item = e.target;
+      if (item.matches && item.matches('.faq__item') && item.open) {
+        document.querySelectorAll('.faq__item[open]').forEach(function (d) { if (d !== item) d.open = false; });
+      }
+      relayout();
+    }, true);
+  }
+
   var mode = null, t;
   function onResize() {
     var vw = root.clientWidth;
@@ -272,6 +306,7 @@
     mode = root.clientWidth > FLUID_MAX ? 'canvas' : 'fluid';
     // слова разбиваем до выравнивания: snap() меряет уже итоговые заголовки
     if (animate) document.querySelectorAll('.h1, .h2').forEach(splitWords);
+    toggles();
     snap();
     stickyHead();
     if (animate) {

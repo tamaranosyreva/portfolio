@@ -39,6 +39,8 @@
   --pad: 24px;               /* поле экрана — 1 клетка */
   --gap: 24px;               /* межколонник — 1 клетка */
 
+  --text: 17px;             /* размер обычного текста: абзацы, списки, карточки, ответы */
+
   --f: "Grid Sans", "Onest", "Manrope", system-ui, -apple-system, sans-serif;
 }
 :root[data-accent="yellow"] { --accent: #F2C230; --accent-ink: #141414; --accent-soft: rgba(242, 194, 48, .3); }
@@ -58,7 +60,7 @@ body {
   color: var(--ink);
   font-family: var(--f);
   font-weight: 300;
-  font-size: 18px;
+  font-size: var(--text);   /* обычный текст — один размер на всём сайте */
   line-height: 24px;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -155,7 +157,7 @@ body[data-case] .proof { padding-top: 24px; }  /* до «Пути покупат
 .lead { --f: calc(24px / .7); --l: 48px; letter-spacing: -0.02em; font-size: var(--f); line-height: var(--l);
   margin-top: calc((var(--l) - var(--f) * 1.153) / -2 - var(--f) * .213);
   margin-bottom: calc((var(--l) - var(--f) * 1.153) / -2 - var(--f) * .24); }
-.small { font-size: 15px; line-height: 24px; }
+.small { font-size: var(--text); line-height: 24px; }
 .muted { color: var(--ink-2); }
 .mark { background: var(--accent); color: var(--accent-ink); padding: 0 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 
@@ -213,7 +215,7 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
 .comp > .idx { color: var(--accent); }
 .comp { grid-column: span 3; padding-bottom: 23px; border-top: 1px solid var(--line-strong); display: grid; align-content: start; row-gap: 24px; }
 .comp .h3 { min-height: 48px; }
-.comp .list { font-size: 17px; }
+.comp .list { font-size: var(--text); }
 
 /* ==========================================================================
    03 — инструменты
@@ -231,6 +233,36 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
 .trow__cat .idx { color: var(--accent); }
 .trow__why { grid-column: 10 / 13; }
 .nw { font-style: normal; white-space: nowrap; }
+/* «Услуги и цены» — строками, как «Инструменты»; список раскрывается большой стрелкой у заголовка */
+.price__desc { grid-column: 4 / 10; padding-right: 24px; }   /* до столбца с ценой — 2 клетки */
+.price__cost { grid-column: 10 / 13; display: grid; }
+.price__cost > .h4 { color: var(--accent); }   /* цена — синим, как в кейсах */
+/* свёрнуто — первые три услуги и кнопка «Смотреть все услуги»; без JS список просто открыт */
+.prices.is-collapsible:not(.is-open) .price:nth-child(n+4) { display: none; }
+.prices.is-collapsible:not(.is-open) .price:nth-child(3) { box-shadow: 0 1px 0 var(--line); }
+/* как «Связаться» на первом экране: серая, справа; кнопка по умолчанию не наследует шрифт — задаём явно */
+.prices__more { justify-self: end; padding: 0; border: 0; background: none; font-family: inherit; color: var(--ink-2); cursor: pointer; }
+.prices:not(.is-collapsible) .prices__more { display: none; }
+
+/* «Вопросы и ответы» — аккордеон в две колонки: колонки независимы, открытый ответ не меняет высоту соседней */
+.faq__cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--gap); align-items: start; }
+.faq__item { border-top: 1px solid var(--line); }
+.faq__item:last-child { box-shadow: 0 1px 0 var(--line); }
+.faq__q { display: grid; grid-template-columns: 48px minmax(0, 1fr) 24px; align-items: start; padding: 23px 0 24px; cursor: pointer; list-style: none; }
+.faq__q::-webkit-details-marker { display: none; }
+.faq__q .idx { color: var(--accent); }
+.faq__q:hover .h4 { color: var(--accent); }
+/* плюс, который в открытом вопросе становится минусом */
+.faq__icon { position: relative; justify-self: end; width: 14px; height: 24px; }
+.faq__icon::before, .faq__icon::after { content: ""; position: absolute; left: 0; top: 11.5px; width: 14px; height: 1px; background: var(--accent); transition: transform .25s ease; }
+.faq__icon::after { transform: rotate(90deg); }
+.faq__item[open] .faq__icon::after { transform: rotate(0deg); }
+.faq__answer { padding: 0 24px 24px 48px; }
+
+/* Цена в кейсе — под заголовком, отдельно от рамки с клиентом */
+.case__price { display: grid; margin-top: 24px; }   /* отступ от заголовка — клетка; текст обычный, как на сайте */
+.case__cost { color: var(--accent); font-weight: 400; }   /* цена и срок — синим */
+
 .tools__combo { align-items: start; padding-top: 23px; border-top: 1px solid var(--line-strong); }
 .tools__combo .idx { grid-column: 1 / 4; padding-top: 12px; }
 .tools__combo .flow { grid-column: 4 / 13; }
@@ -289,7 +321,7 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
 .card__row { display: grid; grid-template-columns: 96px 1fr; column-gap: 0; }
 .card__foot { padding: 24px 0; display: flex; justify-content: space-between; align-items: center; height: 72px; line-height: 24px; }
 .card__foot:empty { height: 24px; padding: 0; }
-.card__link { display: inline-flex; gap: 8px; align-items: center; font-size: 15px; font-weight: 400; }
+.card__link { display: inline-flex; gap: 8px; align-items: center; font-size: var(--text); font-weight: 400; }
 .card__link::after { content: ""; position: absolute; inset: 0; }
 .card:hover .card__link { color: var(--accent); }
 :root[data-accent] .card:hover .card__link { color: var(--ink); }
@@ -387,7 +419,6 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
    ========================================================================== */
 @media screen and (max-width: 1199px) {
   :root { --pad: 16px; }
-  body { font-size: 17px; }
   .screen { width: auto; height: auto; min-height: 0; overflow: visible; padding: 0 var(--pad) 48px; row-gap: 48px; }
   .head { grid-template-columns: 1fr; height: auto; padding-top: 24px; row-gap: 24px; }  /* пустая клетка, имя, клетка, меню, линия */
   .head__name { grid-column: 1; }
@@ -415,6 +446,16 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
   .comp > .h3 { grid-column: 2; grid-row: 1; padding-top: 23px; }
   .comp .list li + li { margin-top: 0; }
   .comp .h3 { min-height: 0; }
+  /* Цены на телефоне и планшете: номер слева, справа одна колонка — название,
+     под ним цена и срок одной строкой, ниже описание. Без пустых строк между ними. */
+  .grid.price { grid-template-columns: 48px minmax(0, 1fr); column-gap: 0; row-gap: 24px; }   /* текст — по одной линии с названием, между строками — клетка */
+  .grid.price > .trow__cat { grid-column: 1 / -1 !important; grid-row: 1; }
+  .grid.price > .price__cost { grid-column: 2 !important; grid-row: 2; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 8px; }
+  .grid.price > .price__cost > .small::before { content: "·"; margin-right: 8px; }
+  .grid.price > .price__desc { grid-column: 2 !important; grid-row: 3; padding-right: 0; }
+  .faq__cols { grid-template-columns: minmax(0, 1fr); }
+  .faq__col:first-child > .faq__item:last-child { box-shadow: none; }   /* колонки идут подряд — без двойной линии */
+  .faq__answer { padding-right: 0; }   /* ответ — по линии вопроса, как цены */
   .trow__cat, .trow__why { padding-top: 0; }
   .trow__cat { align-items: flex-start; }  /* номер и название — каждый в своей строке 24: ряд ровно в клетку */
   .cards { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; row-gap: 24px; }
@@ -524,8 +565,11 @@ a:hover > .arrow--back { transform: translateX(-4px); }
    ========================================================================== */
 @page { size: 1464px 912px; margin: 0; }
 @media print {
+  body { font-size: 18px; }
+  .small, .card__link { font-size: 15px; }
   body.is-canvas { zoom: 1; }
   .head-bar, .grid-glow { display: none; }
+  .prices, .faq, .case__price { display: none; }   /* PDF-презентация — без цен и вопросов */
   .js-anim :is(.h1, .h2), .js-anim .aw { opacity: 1 !important; top: 0 !important; }   /* в PDF — без анимации */
   .js-anim .arrow { stroke-dashoffset: 0 !important; }
   .screen { height: 912px; break-after: page; page-break-after: always; }
