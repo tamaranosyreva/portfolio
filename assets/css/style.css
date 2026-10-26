@@ -312,6 +312,10 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
 .card__logo { align-self: start; display: flex; align-items: center; justify-content: center; height: 96px; }
 .card__logo img { width: 168px; height: auto; }
 .card__art { align-self: start; display: block; height: 96px; width: auto; color: var(--ink); overflow: visible; }
+/* Кейсы: в строке номера справа — небольшой логотип клиента (справочно), под ними — схема */
+.card__top { justify-self: stretch; display: flex; justify-content: space-between; align-items: center; height: 24px; }
+.card__client { display: block; height: 24px; width: auto; }
+.card__client.logo-naro { font-size: 15.6px; line-height: 15.6px; margin: calc(15.6px * -.3529) 0 calc(15.6px * -.1121); position: static; }   /* видимая высота — 24px, как у SP CANDLE */
 /* «нарочито просто»: Open Sans Bold, строка = кеглю; от верха строчных первой строки
    до базовой линии второй = 1,535 кегля = 74,5px — как у логотипа SP Candle */
 .logo-naro { display: block; font-family: "NP Logo", "Open Sans", sans-serif; font-weight: 700; font-size: 48.56px; line-height: 48.56px; letter-spacing: -0.01em; color: var(--ink);
@@ -407,6 +411,7 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
 .fan__targets .flow__node { position: relative; }
 .fan__targets .flow__node::before { content: ""; position: absolute; left: -25px; top: 23px; width: 24px; height: 1px; background: var(--ink); }
 /* Схема писем: три пиктограммы 3×2 клетки, стрелки по центру пиктограмм */
+.shot__icon { display: block; height: 168px; width: auto; max-width: 100%; overflow: visible; color: var(--ink); }   /* иконка шага вместо скриншота: 7 клеток */
 .mailflow { display: grid; grid-template-columns: repeat(5, 72px); align-items: start; }
 .mailflow__item { display: grid; grid-template-columns: 72px; row-gap: 24px; justify-items: unsafe center; text-align: center; }  /* метка и подпись — по центру своей пиктограммы, длинные свисают поровну */
 .mailflow__item > b { width: max-content; }
