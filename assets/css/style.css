@@ -243,6 +243,10 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
 /* как «Связаться» на первом экране: серая, справа; кнопка по умолчанию не наследует шрифт — задаём явно */
 .prices__more { justify-self: end; padding: 0; border: 0; background: none; font-family: inherit; color: var(--ink-2); cursor: pointer; }
 .prices:not(.is-collapsible) .prices__more { display: none; }
+/* «Не нашли свою задачу?» — синяя плашка под списком, как синяя карточка в кейсах: поле 24px, строки по клеткам */
+.prices__cta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 24px 48px; padding: 23px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); }
+.prices__cta > p { flex: 1 1 288px; }
+.prices__cta-link { display: inline-flex; gap: 8px; align-items: center; font-weight: 400; }
 
 /* «Вопросы и ответы» — аккордеон в две колонки: колонки независимы, открытый ответ не меняет высоту соседней */
 .faq__cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--gap); align-items: start; }
