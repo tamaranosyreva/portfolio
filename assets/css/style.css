@@ -204,7 +204,7 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
 .hero__meta { grid-column: 10 / 13; text-align: right; display: grid; }
 .hero__meta a { justify-self: end; }
 /* «Связаться» — при наведении синяя заливка с белым текстом, как у кнопок в карточках кейсов */
-.hero__meta .u-link { display: inline-block; line-height: 24px; padding: 0 8px; margin-right: -8px;   /* поле под заливку, текст на прежнем месте */
+.hero__meta .u-link { display: inline-block; line-height: 24px; padding: 0 8px;   /* заливка — по краю сетки, как у «Смотреть все услуги» */
   background-origin: content-box;   /* подчёркивание — только под текстом */
   transition: background-size .25s, background-color .2s, color .2s; }
 .hero__meta .u-link:hover { background-color: var(--accent); color: var(--accent-ink); }
