@@ -203,6 +203,11 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
 .hero__sub { grid-column: 4 / 10; display: grid; row-gap: 24px; }
 .hero__meta { grid-column: 10 / 13; text-align: right; display: grid; }
 .hero__meta a { justify-self: end; }
+/* «Связаться» — при наведении синяя заливка с белым текстом, как у кнопок в карточках кейсов */
+.hero__meta .u-link { display: inline-block; line-height: 24px; padding: 0 8px; margin-right: -8px;   /* поле под заливку, текст на прежнем месте */
+  background-origin: content-box;   /* подчёркивание — только под текстом */
+  transition: background-size .25s, background-color .2s, color .2s; }
+.hero__meta .u-link:hover { background-color: var(--accent); color: var(--accent-ink); }
 
 /* ==========================================================================
    02 — обо мне
@@ -241,7 +246,10 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
 .prices.is-collapsible:not(.is-open) .price:nth-child(n+4) { display: none; }
 .prices.is-collapsible:not(.is-open) .price:nth-child(3) { box-shadow: 0 1px 0 var(--line); }
 /* как «Связаться» на первом экране: серая, справа; кнопка по умолчанию не наследует шрифт — задаём явно */
-.prices__more { justify-self: end; padding: 0; border: 0; background: none; font-family: inherit; color: var(--ink-2); cursor: pointer; }
+.prices__more { justify-self: end; padding: 0 8px; margin-right: -8px; line-height: 24px; border: 0; background: none; font-family: inherit; color: var(--ink-2); cursor: pointer;
+  transition: background-color .2s, color .2s; }
+.prices__more:hover { background-color: var(--accent); color: var(--accent-ink); }   /* как «Связаться» */
+.prices__more:hover .u-link { background-size: 0 1px; background-position: 100% 100%; }
 .prices:not(.is-collapsible) .prices__more { display: none; }
 /* «Не нашли свою задачу?» — синяя плашка под списком, как синяя карточка в кейсах: поле 24px, строки по клеткам */
 .prices__cta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 24px 48px; padding: 23px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); }
@@ -329,10 +337,12 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
 .card__row { display: grid; grid-template-columns: 96px 1fr; column-gap: 0; }
 .card__foot { padding: 24px 0; display: flex; justify-content: space-between; align-items: center; height: 72px; line-height: 24px; }
 .card__foot:empty { height: 24px; padding: 0; }
-.card__link { display: inline-flex; gap: 8px; align-items: center; font-size: var(--text); font-weight: 400; }
+.card__link { display: inline-flex; gap: 8px; align-items: center; font-size: var(--text); font-weight: 400;
+  padding: 0 8px; margin: 0 -8px;   /* поле под заливку; текст стоит на прежнем месте */
+  transition: background-color .2s, color .2s; }
 .card__link::after { content: ""; position: absolute; inset: 0; }
-.card:hover .card__link { color: var(--accent); }
-:root[data-accent] .card:hover .card__link { color: var(--ink); }
+/* при наведении — синяя заливка с белым текстом, как выделение в тексте: подсветка клеток от курсора его не перебивает */
+.card:hover .card__link { background-color: var(--accent); color: var(--accent-ink); }
 
 /* Карточка без изображения: поле 24px внутри, содержимое по клеткам */
 .card__big { font-size: 64px; line-height: 72px; letter-spacing: -0.05em; font-weight: 400; }
@@ -341,7 +351,7 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
 
 .card--accent { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
 .card--accent .idx, .card--accent .muted { color: inherit; opacity: .85; }
-.card--accent:hover .card__link { color: inherit; }
+.card--accent:hover .card__link { background-color: var(--accent-ink); color: var(--accent); }   /* на синей карточке — наоборот: белая заливка, синий текст */
 
 /* ==========================================================================
    07 — контакты
