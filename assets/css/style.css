@@ -246,7 +246,8 @@ a.pill::after { content: ""; position: absolute; inset: -12px -4px; }
 .prices.is-collapsible:not(.is-open) .price:nth-child(n+4) { display: none; }
 .prices.is-collapsible:not(.is-open) .price:nth-child(3) { box-shadow: 0 1px 0 var(--line); }
 /* как «Связаться» на первом экране: серая, справа; кнопка по умолчанию не наследует шрифт — задаём явно */
-.prices__more { justify-self: end; padding: 0 8px; margin-right: -8px; line-height: 24px; border: 0; background: none; font-family: inherit; color: var(--ink-2); cursor: pointer;
+.prices__more { justify-self: end; padding: 0 8px; line-height: 24px;   /* заливка — по краю сетки, как синий блок ниже */
+  border: 0; background: none; font-family: inherit; color: var(--ink-2); cursor: pointer;
   transition: background-color .2s, color .2s; }
 .prices__more:hover { background-color: var(--accent); color: var(--accent-ink); }   /* как «Связаться» */
 .prices__more:hover .u-link { background-size: 0 1px; background-position: 100% 100%; }
